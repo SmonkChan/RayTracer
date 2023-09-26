@@ -5,6 +5,8 @@
 #include "vector.h"
 #include "point.h"
 #include "color.h"
+#include "material.h"
+#include "lightsource.h"
 
 class raycaster{
     private:
@@ -53,7 +55,7 @@ class raycaster{
     void operator=(const raycaster& copyray);
 
     //Methods that do the core functions of the raycaster
-    shape* shootRay(point3D origin, vector3D ray);
+    shape* shootRay(point3D origin, vector3D ray, double& intersectionDistance);
     void castAll();
     color* getColors();
 

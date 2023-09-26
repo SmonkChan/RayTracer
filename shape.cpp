@@ -10,28 +10,28 @@ shape::shape(const shape& shape2){
     *this = shape2;
 }
 
-color shape::getColor(){return material;}
+material* shape::getColor(){return texture;}
 
 //Print all the data about a shape as a string;
 string shape::printShape(){
     string out;
     out.append("Default Shape Object\n");
-    out.append("material: ").append(material.getString()).append("\n");
+    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
     return out;
 }
 
 //Constructors for a sphere
 sphere::sphere(){}
 //sphere is defined with a center point, radius and material color
-sphere::sphere(point3D c, double r, color m){
+sphere::sphere(point3D c, double r, material* m){
     center = c;
     radius = r;
-    material = m;
+    texture = m;
 }
 void sphere::operator=(const sphere& sphere2){
     this->center = sphere2.center;
     this->radius = sphere2.radius;
-    this->material = sphere2.material;
+    this->texture = sphere2.texture;
 }
 
 //Methods for a sphere
@@ -87,26 +87,26 @@ string sphere::printShape(){
     out.append("Sphere\n");
     out.append("center: ").append(center.printPoint()).append("\n");
     out.append("raidus: ").append(to_string(radius)).append("\n");
-    out.append("material: ").append(material.getString()).append("\n");
+    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
     return out;
 }
 
 //Constructors for a cylinder
 cylinder::cylinder(){}
 //cylinder is defined with a center point, up vector, radius, length and material color
-cylinder::cylinder(point3D c, vector3D v, double r, double l, color m){
+cylinder::cylinder(point3D c, vector3D v, double r, double l, material* m){
     upVector = v.getNormalVector();
     center = c;
     radius = r;
     length = l;
-    material = m;
+    texture = m;
 }
 void cylinder::operator=(const cylinder& shape2){
     this->center = shape2.center;
     this->radius = shape2.radius;
     this->length = shape2.length;
     this->upVector = shape2.upVector;
-    this->material = shape2.material;
+    this->texture = shape2.texture;
 }
 
 /*
@@ -151,6 +151,6 @@ string cylinder::printShape(){
     out.append("upVector: ").append(upVector.printVector()).append("\n");
     out.append("raidus: ").append(to_string(radius)).append("\n");
     out.append("length: ").append(to_string(length)).append("\n");
-    out.append("material: ").append(material.getString()).append("\n");
+    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
     return out;
 }

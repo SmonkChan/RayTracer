@@ -3,6 +3,8 @@
 #include "point.h"
 #include "color.h"
 #include "vector.h"
+#include "material.h"
+#include "lightsource.h"
 
 //This is used to define what type of shape the shape class is created from
 //The other shape objects are all inherited off of this class
@@ -10,15 +12,14 @@
 class shape
 {
     protected:
-    color material; //All shapes should have a material color
+    material* texture; //All shapes should have a material color
 
     public:
     shape();
     shape(const shape& shape2);
-    color getColor();
+    material* getColor();
     virtual double intersects(point3D rayOrigin, vector3D ray) = 0;
     virtual std::string printShape();
-
 };
 
 //The sphere class
@@ -30,7 +31,7 @@ class sphere : public shape
 
     public:
     sphere();
-    sphere(point3D c, double r, color m);
+    sphere(point3D c, double r, material* m);
     void operator=(const sphere &sphere2);
     double intersects(point3D rayOrigin, vector3D ray);
     std::string printShape();
@@ -47,7 +48,7 @@ class cylinder : public shape
 
     public:
     cylinder();
-    cylinder(point3D c, vector3D v, double r, double l, color m);
+    cylinder(point3D c, vector3D v, double r, double l, material* m);
     void operator=(const cylinder &shape2);
     double intersects(point3D rayOrigin, vector3D ray);
     std::string printShape();

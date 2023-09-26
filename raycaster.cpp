@@ -89,8 +89,7 @@ This function takes a ray and then tests to see if it intersects with any shape
 If it does, it keeps track of the distance and the shape that it intersected
 It then returns the shape that the ray intersected at the closes point
 */
-shape* raycaster::shootRay(point3D origin, vector3D ray){
-    double minDistance = INFINITY;
+shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance){
     shape* closestShape = NULL;
     point3D intsecPoint;
     for(int i = 0; i < numShapes; i++){
@@ -113,9 +112,10 @@ void raycaster::castAll(){
         for(int i =0; i < imsizeWidth; i++){
             vector3D ray = bottomVector+(horiPixelChange.multiplyByScalar(i))+(vertPixelChange.multiplyByScalar(j));
             ray.normalize();
-            shape* shapeIntersection = shootRay(eye, ray);
+            double intersectionDistance = INFINITY;
+            shape* shapeIntersection = shootRay(eye, ray, intersectionDistance);
             if(shapeIntersection != NULL){
-                colorOut[(j*imsizeWidth)+i] = shootRay(eye, ray)->getColor();
+                colorOut[(j*imsizeWidth)+i] = shapeIntersection->getColor()->calculateColor();
             } else{colorOut[(j*imsizeWidth)+i] = bkgcolor;}
         }
     }

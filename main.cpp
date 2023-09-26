@@ -8,6 +8,8 @@
 #include "vector.h"
 #include "point.h"
 #include "color.h"
+#include "material.h"
+#include "lightsource.h"
 
 using namespace std;
 
@@ -42,16 +44,22 @@ int main(int argc, char *argv[])
     int numShapes = 0;
     shape** allShapeList = new shape*[listSize];
 
+    int matlistSize = 4;
+    int numMats = 0;
+    material** allMaterials = new material*[matlistSize];
 
     //A bunch of temp variables to help parse the file
     string strIn;
-    color tempMaterial = color();
+    material* currMaterial;
     double temp1;
     double temp2;
     double temp3;
     vector3D tempVector;
     point3D tempPoint;
     shape** tempList = nullptr;
+    material** tempMats = nullptr;
+    color tempColor1;
+    color tempColor2;
 
     //Open and parse the input file
     ifstream infile;
@@ -89,12 +97,24 @@ int main(int argc, char *argv[])
                 }
             }
             else if(strIn == "mtlcolor"){
+                if(numMats == matlistSize){
+                    matlistSize *= 2;
+                    tempMats = new material*[listSize];
+                    for(int i = 0; i < numMats; i++){
+                        tempMats[i] = allMaterials[i];                        }
+                    delete[] allMaterials;
+                    allMaterials = tempMats;
+                    tempMats = nullptr;
+                }
                 infile >> temp1 >> temp2 >> temp3;
                 if((temp1 > 1) || (temp1 < 0) || (temp2 > 1) || (temp2 < 0) || (temp3 > 1) || (temp3 < 0)){
                     cout << "Color values must be between 0 and 1 inclusive" << endl;
                 }
                 else {
-                    tempMaterial = color(temp1, temp2, temp3);
+                    tempColor1 = color(temp1, temp2, temp3);
+                    currMaterial = new material(color(temp1, temp2, temp3));
+                    allMaterials[numMats] = currMaterial;
+                    numMats++;
                 }                
             }
             else if(strIn == "sphere"){
@@ -105,7 +125,6 @@ int main(int argc, char *argv[])
                     tempList = new shape*[listSize];
                     for(int i = 0; i < numShapes; i++){
                         tempList[i] = allShapeList[i];
-
                     }
                     delete[] allShapeList;
                     allShapeList = tempList;
@@ -114,7 +133,7 @@ int main(int argc, char *argv[])
                 infile >> temp1 >> temp2 >> temp3;
                 tempPoint = point3D(temp1, temp2, temp3);
                 infile >> temp1; 
-                allShapeList[numShapes] = new sphere(tempPoint, temp1, tempMaterial);
+                allShapeList[numShapes] = new sphere(tempPoint, temp1, currMaterial);
                 numShapes++;
             }
             else if(strIn == "cylinder"){
@@ -135,7 +154,7 @@ int main(int argc, char *argv[])
                 infile >> temp1 >> temp2; 
                 //Casts the void pointer as a cylinder in order to add it to the array
                 //I am using the chunk of memory as an array, and manually adding to the pointer to access the array indicies
-                allShapeList[numShapes] = new cylinder(tempPoint, tempVector, temp1, temp2, tempMaterial);
+                allShapeList[numShapes] = new cylinder(tempPoint, tempVector, temp1, temp2, currMaterial);
                 numShapes++;
             }
             else if(strIn == "parallel"){
@@ -166,6 +185,10 @@ int main(int argc, char *argv[])
             delete allShapeList[i];
         } 
         delete[] allShapeList;
+        for(int i = 0; i < numMats; i++){
+            delete allMaterials[i];
+        }
+        delete[] allMaterials;
         return -1;
     }
     //If either given vector is a null vector or they are colinear, stop the program
@@ -175,6 +198,10 @@ int main(int argc, char *argv[])
             delete allShapeList[i];
         } 
         delete[] allShapeList;
+        for(int i = 0; i < numMats; i++){
+            delete allMaterials[i];
+        }
+        delete[] allMaterials;
         return -1;
     }
 
@@ -217,5 +244,10 @@ int main(int argc, char *argv[])
         delete allShapeList[i];
     }
     delete[] allShapeList;
+
+    for(int i = 0; i < numMats; i++){
+        delete allMaterials[i];
+    }
+    delete[] allMaterials;
     return 0;
 }
