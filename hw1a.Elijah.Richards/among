@@ -1,0 +1,16 @@
+eye -7 2 -1
+viewdir 1.8 -0.3 -1
+updir 0 1.5 -1
+fov 35.0
+imsize 200 200
+bkgcolor 0 0 0.1
+mtlcolor 1 0 0
+cylinder 0 0 -5 0 1 0 2 4
+sphere 0 2 -5 2
+cylinder 0 -3 -5.5 0 1 0 1.25 2
+cylinder 0 -3 -4.5 0 1 0 1.25 2
+cylinder 0.75 0 -5 0 1 0 2 3
+mtlcolor 0.75 0.75 1
+sphere -2 1.5 -4.5 1
+cylinder -2 1.5 -5 0 0 -1 1 1
+sphere -2 1.5 -5.5 1
