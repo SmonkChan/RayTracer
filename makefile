@@ -25,4 +25,4 @@ color.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c color.cpp -o color.o
 
 clean:
-	rm -f *.o *.ppm raycaster_app.out
+	rm -f *.o *.ppm raycaster_app.out ./TestImages/*.ppm
