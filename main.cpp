@@ -32,6 +32,8 @@ int main(int argc, char *argv[])
     int width;
     int height;
     color bkgcolor;
+
+    lightsource* light = nullptr;
     //Was using to test some things
     //cout << "Size of shape class: " << sizeof(shape) << endl;
     //cout << "Size of sphere class: " << sizeof(sphere) << endl;
@@ -111,8 +113,13 @@ int main(int argc, char *argv[])
                     cout << "Color values must be between 0 and 1 inclusive" << endl;
                 }
                 else {
-                    tempColor1 = color(temp1, temp2, temp3);
-                    currMaterial = new material(color(temp1, temp2, temp3));
+                    double tempDoubles[10];
+                    for(int i = 0; i < 10; i++){
+                        cin >> tempDoubles[i];
+                    }
+                    color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
+                    color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
+                    currMaterial = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
                     allMaterials[numMats] = currMaterial;
                     numMats++;
                 }                
@@ -160,6 +167,31 @@ int main(int argc, char *argv[])
             else if(strIn == "parallel"){
                 cout << "Impliment parallel keyword" << endl;
             }
+            else if(strIn == "light"){
+
+                //================
+                //DELETE THIS LINE IF MORE THAN ONE LIGHT SOURCE
+                delete light;
+                //================
+
+                int lightType;
+                double r;
+                double g;
+                double b;
+                cin >> temp1 >> temp2 >> temp3 >> lightType >> r >> g >> b;
+                color lightColor = color(r,g,b);
+                switch (lightType){
+                case 0:
+                    light = new directional_light(vector3D(temp1, temp2, temp3), lightColor);
+                    break;
+                case 1:
+                    light = new point_light(point3D(temp1, temp2, temp3), lightColor);
+                    break;
+                default:
+                    light = nullptr;
+                    break;
+                }
+            }
         }
         infile.close();
 
@@ -206,7 +238,7 @@ int main(int argc, char *argv[])
     }
 
     //raycaster is a class that contains all of the logic to cast the rays
-    raycaster rays(eye, viewdir, updir, fov, width, height, bkgcolor, allShapeList, numShapes);
+    raycaster rays(eye, viewdir, updir, fov, width, height, bkgcolor, allShapeList, numShapes, light);
     rays.castAll();
 
     //Creates an output file based on the name of the input file
@@ -249,5 +281,6 @@ int main(int argc, char *argv[])
         delete allMaterials[i];
     }
     delete[] allMaterials;
+    delete light;
     return 0;
 }

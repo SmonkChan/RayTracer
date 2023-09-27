@@ -20,6 +20,7 @@ class raycaster{
     int numShapes;
     shape** allShapesList;
     color* colorOut;
+    lightsource* light;
 
     //These vectors forms the orthonormal basis for the viewplane
     vector3D orthoXBasis;
@@ -49,7 +50,7 @@ class raycaster{
 
     public:
     //Constructors and destructors
-    raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n);
+    raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n, lightsource* l = nullptr);
     raycaster(const raycaster& copyray);
     ~raycaster();
     void operator=(const raycaster& copyray);

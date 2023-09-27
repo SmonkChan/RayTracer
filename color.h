@@ -5,7 +5,9 @@
 class color 
 {
 private:
-    std::tuple<unsigned char, unsigned char, unsigned char> rgbChar;
+    double red;
+    double green;
+    double blue;
 public:
     //Constructors
     color();
@@ -14,6 +16,10 @@ public:
     color(const color& color2);
     ~color();
     
+    double getRed(){return red;}
+    double getGreen(){return green;}
+    double getBlue(){return blue;}
+
     void operator=(const color& color2);
 
     //Outputs the char data as a string to make extreamly easy to print

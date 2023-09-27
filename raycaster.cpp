@@ -2,7 +2,7 @@
 #include<iostream>
 #include "raycaster.h"
 
-raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n){
+raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n, lightsource* l){
     eye = e;
     viewdir = v;
     updir = u;
@@ -12,6 +12,7 @@ raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, doub
     bkgcolor = b;
     allShapesList = a;
     numShapes = n;
+    light = l;
 
     //Defines an array to store the colors for the out file
     colorOut = new color[imsizeWidth * imsizeHeight];
@@ -28,6 +29,7 @@ raycaster::raycaster(const raycaster& copyray){
 }
 
 raycaster::~raycaster(){
+    delete light;
     delete[] colorOut;
 }
 
@@ -115,6 +117,8 @@ void raycaster::castAll(){
             double intersectionDistance = INFINITY;
             shape* shapeIntersection = shootRay(eye, ray, intersectionDistance);
             if(shapeIntersection != NULL){
+                point3D intersectionPoint = eye + ray.multiplyByScalar(intersectionDistance);
+                vector3D normal = shapeIntersection->findNormal(intersectionPoint);
                 colorOut[(j*imsizeWidth)+i] = shapeIntersection->getColor()->calculateColor();
             } else{colorOut[(j*imsizeWidth)+i] = bkgcolor;}
         }
