@@ -143,7 +143,7 @@ double cylinder::intersects(point3D origin, vector3D ray){
         return option2;
     }else if(option2Distance > maxDistance){
         return option1;
-    }else if(option1<option2 && option1>=0){
+    }else if(option1<option2 && option1>0.00001){
         return option1;
     } else{return option2;}
 }

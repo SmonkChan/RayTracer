@@ -35,8 +35,5 @@ string color::getString(){
     int r = (int)(red*255);
     int g = (int)(green*255);
     int b = (int)(blue*255);
-    if(r < 0){r = 0;}
-    if(g < 0){g = 0;}
-    if(b < 0){b = 0;}
     return to_string(r).append(" ").append(to_string(g)).append(" ").append(to_string(b));
 }

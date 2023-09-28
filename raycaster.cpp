@@ -102,7 +102,7 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance){
     point3D intsecPoint;
     for(int i = 0; i < numShapes; i++){
         double tempdist = allShapesList[i]->intersects(origin, ray);
-        if((tempdist > 0.0001) && (tempdist < minDistance)){
+        if((tempdist > 0.00000001) && (tempdist < minDistance)){
             minDistance = tempdist;
             closestShape = (allShapesList[i]);
         }

@@ -45,11 +45,10 @@ void point3D::operator=(const point3D& point2){
 
 //Method for adding a vector to a point to get another point
 point3D point3D::operator+(vector3D vector){
-    point3D newPoint = point3D(*this);
-    newPoint.p[0] += vector.getX();
-    newPoint.p[1] += vector.getY();
-    newPoint.p[2] += vector.getZ();
-    return newPoint;
+    double x = this->p[0] + vector.getX();
+    double y = this->p[1] + vector.getY();
+    double z = this->p[2] + vector.getZ();
+    return point3D(x, y, z);
 }
 
 //Method for subtracting a point from a point to get a vector
