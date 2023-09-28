@@ -2,8 +2,8 @@ eye 0 0 0
 viewdir 0 0 -1
 updir 0 1 0
 fov 90.0
-imsize 200 200
+imsize 400 400
 bkgcolor 0 0 0.1
 mtlcolor 1 0 0 1 1 1 0.1 0.2 0.2 50
-cylinder 0 0 -10 0.5 0.5 1 2 8
-light -10 0 -10 0.5 0.5 0.5
+cylinder 0 0 -10 0 -.35 1 2 8
+light -10 7 -17 0.5 0.5 0.5
