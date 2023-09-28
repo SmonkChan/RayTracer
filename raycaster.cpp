@@ -96,7 +96,7 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance){
     point3D intsecPoint;
     for(int i = 0; i < numShapes; i++){
         double tempdist = allShapesList[i]->intersects(origin, ray);
-        if((tempdist >= 0) && (tempdist < minDistance)){
+        if((tempdist > 0.0001) && (tempdist < minDistance)){
             minDistance = tempdist;
             closestShape = (allShapesList[i]);
         }
@@ -122,14 +122,16 @@ void raycaster::castAll(){
 color raycaster::calculateRayEffect(vector3D ray){
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(eye, ray, intersectionDistance);
-    if(shapeIntersection != NULL){
+    //std::cout << "intersectionDistance " << intersectionDistance << std::endl;
+    if(intersectionDistance < INFINITY){
         //check what type of material it is
         //If it is a default material, we just want it to return the color
         //As such we dont have to worry about all the cacluations for fancier images
         material* shapeMaterial = shapeIntersection->getColor();
         if(shapeMaterial->materialType() == "PhongMaterial"){
+            //std::cout << "Identified Phong Material" << std::endl;
             point3D intersectionPoint = eye + ray.multiplyByScalar(intersectionDistance);
-            vector3D normal = shapeIntersection->findNormal(intersectionPoint);
+            vector3D normal = shapeIntersection->findNormal(intersectionPoint, eye);
             color* lightShadow = new color[numLights];
             vector3D* lightDirection = new vector3D[numLights];
             for(int i = 0; i < numLights; i++){
@@ -141,7 +143,7 @@ color raycaster::calculateRayEffect(vector3D ray){
                 //If there is a shadow the light color is treated as if the light has a black color
                 //Light attenuation is also baked into the getLightColor function
                 if (newDistance < distance){lightShadow[i] = color(0.0,0.0,0.0);}
-                else{lightShadow[i] = allLights[i]->getLightColor(distance);}
+                else{; lightShadow[i] = allLights[i]->getLightColor(distance);}
             }
             color result = shapeMaterial->calculateColor(eye, intersectionPoint, allLights, lightShadow, lightDirection, numLights, normal);
             delete[] lightShadow;

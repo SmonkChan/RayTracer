@@ -2,6 +2,7 @@
 
 directional_light::directional_light(vector3D v, color c){
     lightDirection = v;
+    lightColor = c;
 }
 
 vector3D directional_light::getLightDirection(point3D p){
@@ -12,6 +13,7 @@ double directional_light::distanceFromLight(point3D p){{return INFINITY;}}
 
 point_light::point_light(point3D p, color c){
     lightOrigin = p;
+    lightColor = c;
 }
 
 vector3D point_light::getLightDirection(point3D p){

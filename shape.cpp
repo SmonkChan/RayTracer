@@ -90,6 +90,9 @@ string sphere::printShape(){
     out.append("material: ").append(texture->calculateColor().getString()).append("\n");
     return out;
 }
+vector3D sphere::findNormal(point3D intersection, point3D rayOrigin){
+    return (intersection-center).getNormalVector();
+}
 
 //Constructors for a cylinder
 cylinder::cylinder(){}
@@ -153,4 +156,10 @@ string cylinder::printShape(){
     out.append("length: ").append(to_string(length)).append("\n");
     out.append("material: ").append(texture->calculateColor().getString()).append("\n");
     return out;
+}
+vector3D cylinder::findNormal(point3D intersection, point3D rayOrigin){
+    vector3D sliceBasis = (intersection-center).crossProduct(upVector);
+    if(fabs((center-rayOrigin).magnitude()) > fabs((intersection-rayOrigin).magnitude())){
+        return upVector.crossProduct(sliceBasis).getNormalVector();
+    } else {return upVector.crossProduct(sliceBasis).getNormalVector().multiplyByScalar(-1);}
 }

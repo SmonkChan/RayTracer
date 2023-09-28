@@ -37,8 +37,8 @@ void color::operator=(const color& color2){
 
 //Creates a string based on the Char data to easily print
 string color::getString(){
-    string r = to_string((int) red*255);
-    string g = to_string((int) blue*255);
-    string b = to_string((int) green*255);
+    string r = to_string((int) (red*255));
+    string g = to_string((int) (green*255));
+    string b = to_string((int) (blue*255));
     return r.append(" ").append(g).append(" ").append(b);
 }

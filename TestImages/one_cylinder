@@ -4,5 +4,6 @@ updir 0 1 0
 fov 90.0
 imsize 200 200
 bkgcolor 0 0 0.1
-mtlcolor 1 0 0
+mtlcolor 1 0 0 1 1 1 1 0.1 0.2 0.2 50
 cylinder 0 0 -10 0.5 0.5 1 2 2
+light 0 0 -1 0 1 1 1
