@@ -2,6 +2,7 @@
 #define MATERIAL_H
 
 #include <math.h>
+#include <string.h>
 #include "color.h"
 #include "point.h"
 #include "lightsource.h"
@@ -14,6 +15,8 @@ class material
     public:
     material(color base = color());
     virtual color calculateColor();
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
+    virtual std::string materialType(){return "BasicMaterial";}
 };
 
 class Phong_material : public material 
@@ -25,10 +28,10 @@ class Phong_material : public material
     double specularS;
     double specularExponent;
 
-    vector3D calcH();
     public:
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
-    color calculateColor(point3D eye, point3D intersection, lightsource* light, vector3D normal);
+    color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
+    std::string materialType(){return "PhongMaterial";}
 };
 
 #endif

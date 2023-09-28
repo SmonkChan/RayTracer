@@ -2,7 +2,7 @@
 #include<iostream>
 #include "raycaster.h"
 
-raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n, lightsource* l){
+raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int ns, lightsource** l, int nl){
     eye = e;
     viewdir = v;
     updir = u;
@@ -11,8 +11,9 @@ raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, doub
     imsizeHeight = h;
     bkgcolor = b;
     allShapesList = a;
-    numShapes = n;
-    light = l;
+    numShapes = ns;
+    allLights = l;
+    numLights = nl;
 
     //Defines an array to store the colors for the out file
     colorOut = new color[imsizeWidth * imsizeHeight];
@@ -29,7 +30,6 @@ raycaster::raycaster(const raycaster& copyray){
 }
 
 raycaster::~raycaster(){
-    delete light;
     delete[] colorOut;
 }
 
@@ -114,15 +114,43 @@ void raycaster::castAll(){
         for(int i =0; i < imsizeWidth; i++){
             vector3D ray = bottomVector+(horiPixelChange.multiplyByScalar(i))+(vertPixelChange.multiplyByScalar(j));
             ray.normalize();
-            double intersectionDistance = INFINITY;
-            shape* shapeIntersection = shootRay(eye, ray, intersectionDistance);
-            if(shapeIntersection != NULL){
-                point3D intersectionPoint = eye + ray.multiplyByScalar(intersectionDistance);
-                vector3D normal = shapeIntersection->findNormal(intersectionPoint);
-                colorOut[(j*imsizeWidth)+i] = shapeIntersection->getColor()->calculateColor();
-            } else{colorOut[(j*imsizeWidth)+i] = bkgcolor;}
+            colorOut[(j*imsizeWidth)+i] = calculateRayEffect(ray);
         }
     }
+}
+
+color raycaster::calculateRayEffect(vector3D ray){
+    double intersectionDistance = INFINITY;
+    shape* shapeIntersection = shootRay(eye, ray, intersectionDistance);
+    if(shapeIntersection != NULL){
+        //check what type of material it is
+        //If it is a default material, we just want it to return the color
+        //As such we dont have to worry about all the cacluations for fancier images
+        material* shapeMaterial = shapeIntersection->getColor();
+        if(shapeMaterial->materialType() == "PhongMaterial"){
+            point3D intersectionPoint = eye + ray.multiplyByScalar(intersectionDistance);
+            vector3D normal = shapeIntersection->findNormal(intersectionPoint);
+            color* lightShadow = new color[numLights];
+            vector3D* lightDirection = new vector3D[numLights];
+            for(int i = 0; i < numLights; i++){
+                double distance = allLights[i]->distanceFromLight(intersectionPoint);
+                double newDistance = distance;
+                lightDirection[i] = allLights[i]->getLightDirection(intersectionPoint);
+                shootRay(intersectionPoint, lightDirection[i], newDistance);
+                //The light color is baked into the shadow checker
+                //If there is a shadow the light color is treated as if the light has a black color
+                //Light attenuation is also baked into the getLightColor function
+                if (newDistance < distance){lightShadow[i] = color(0.0,0.0,0.0);}
+                else{lightShadow[i] = allLights[i]->getLightColor(distance);}
+            }
+            color result = shapeMaterial->calculateColor(eye, intersectionPoint, allLights, lightShadow, lightDirection, numLights, normal);
+            delete[] lightShadow;
+            delete[] lightDirection;
+            return result;
+        } else{return shapeMaterial->calculateColor();}
+
+        
+    } else{return bkgcolor;}
 }
 
 color* raycaster::getColors(){return colorOut;}

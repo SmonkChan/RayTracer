@@ -20,7 +20,8 @@ class raycaster{
     int numShapes;
     shape** allShapesList;
     color* colorOut;
-    lightsource* light;
+    lightsource** allLights;
+    int numLights;
 
     //These vectors forms the orthonormal basis for the viewplane
     vector3D orthoXBasis;
@@ -50,7 +51,7 @@ class raycaster{
 
     public:
     //Constructors and destructors
-    raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n, lightsource* l = nullptr);
+    raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int n, lightsource** l, int nl);
     raycaster(const raycaster& copyray);
     ~raycaster();
     void operator=(const raycaster& copyray);
@@ -58,6 +59,7 @@ class raycaster{
     //Methods that do the core functions of the raycaster
     shape* shootRay(point3D origin, vector3D ray, double& intersectionDistance);
     void castAll();
+    color calculateRayEffect(vector3D ray);
     color* getColors();
 
     //Function to help debug

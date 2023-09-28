@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     int height;
     color bkgcolor;
 
-    lightsource* light = nullptr;
     //Was using to test some things
     //cout << "Size of shape class: " << sizeof(shape) << endl;
     //cout << "Size of sphere class: " << sizeof(sphere) << endl;
@@ -49,6 +48,10 @@ int main(int argc, char *argv[])
     int matlistSize = 4;
     int numMats = 0;
     material** allMaterials = new material*[matlistSize];
+
+    int lightlistSize = 4;
+    int numLights = 0;
+    lightsource** allLights = new lightsource*[numLights];
 
     //A bunch of temp variables to help parse the file
     string strIn;
@@ -168,12 +171,15 @@ int main(int argc, char *argv[])
                 cout << "Impliment parallel keyword" << endl;
             }
             else if(strIn == "light"){
-
-                //================
-                //DELETE THIS LINE IF MORE THAN ONE LIGHT SOURCE
-                delete light;
-                //================
-
+                if(numLights == lightlistSize){
+                    listSize *= 2;
+                    lightsource** tempList = new lightsource*[lightlistSize];
+                    for(int i = 0; i < numLights; i++){
+                        tempList[i] = allLights[i];
+                    }
+                    delete[] allLights;
+                    allLights = tempList;
+                }
                 int lightType;
                 double r;
                 double g;
@@ -182,13 +188,13 @@ int main(int argc, char *argv[])
                 color lightColor = color(r,g,b);
                 switch (lightType){
                 case 0:
-                    light = new directional_light(vector3D(temp1, temp2, temp3), lightColor);
+                    allLights[numLights] = new directional_light(vector3D(temp1, temp2, temp3), lightColor);
                     break;
                 case 1:
-                    light = new point_light(point3D(temp1, temp2, temp3), lightColor);
+                    allLights[numLights] = new point_light(point3D(temp1, temp2, temp3), lightColor);
                     break;
                 default:
-                    light = nullptr;
+                    cout << "Invalid light type" << endl;
                     break;
                 }
             }
@@ -238,7 +244,7 @@ int main(int argc, char *argv[])
     }
 
     //raycaster is a class that contains all of the logic to cast the rays
-    raycaster rays(eye, viewdir, updir, fov, width, height, bkgcolor, allShapeList, numShapes, light);
+    raycaster rays(eye, viewdir, updir, fov, width, height, bkgcolor, allShapeList, numShapes, allLights, numLights);
     rays.castAll();
 
     //Creates an output file based on the name of the input file
@@ -281,6 +287,11 @@ int main(int argc, char *argv[])
         delete allMaterials[i];
     }
     delete[] allMaterials;
-    delete light;
+
+    for(int i = 0; i < numLights; i++){
+        delete allLights[i];
+    }
+    delete[] allLights;
+
     return 0;
 }
