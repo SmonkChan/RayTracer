@@ -16,7 +16,7 @@ class material
     material(color base = color());
     virtual color calculateColor();
     virtual color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
-    virtual std::string materialType(){return "BasicMaterial";}
+    virtual int materialType(){return 0;}
 };
 
 class Phong_material : public material 
@@ -31,7 +31,7 @@ class Phong_material : public material
     public:
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
     color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
-    std::string materialType(){return "PhongMaterial";}
+    int materialType(){return 1;}
 };
 
 #endif

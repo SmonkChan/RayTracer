@@ -47,7 +47,7 @@ class attenuated_light : public point_light
     double c2;
     double c3;
     public:
-    attenuated_light(point3D p, color c, double c1, double c2, double c3);
+    attenuated_light(point3D p, color c, double c1=1, double c2=1, double c3=1);
     color getLightColor(double distance);
 };
 

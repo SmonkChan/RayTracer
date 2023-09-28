@@ -12,7 +12,6 @@ public:
     //Constructors
     color();
     color(double r, double g, double b);
-    color(unsigned char r, unsigned char g, unsigned char b);
     color(const color& color2);
     ~color();
     

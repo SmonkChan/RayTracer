@@ -15,6 +15,10 @@ raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, doub
     allLights = l;
     numLights = nl;
 
+
+    lightShadow = new color[numLights];
+    lightDirection = new vector3D[numLights];
+
     //Defines an array to store the colors for the out file
     colorOut = new color[imsizeWidth * imsizeHeight];
 
@@ -31,6 +35,8 @@ raycaster::raycaster(const raycaster& copyray){
 
 raycaster::~raycaster(){
     delete[] colorOut;
+    delete[] lightShadow;
+    delete[] lightDirection;
 }
 
 void raycaster::operator=(const raycaster& copyray){
@@ -128,12 +134,10 @@ color raycaster::calculateRayEffect(vector3D ray){
         //If it is a default material, we just want it to return the color
         //As such we dont have to worry about all the cacluations for fancier images
         material* shapeMaterial = shapeIntersection->getColor();
-        if(shapeMaterial->materialType() == "PhongMaterial"){
+        if(shapeMaterial->materialType() == 1){
             //std::cout << "Identified Phong Material" << std::endl;
             point3D intersectionPoint = eye + ray.multiplyByScalar(intersectionDistance);
             vector3D normal = shapeIntersection->findNormal(intersectionPoint, eye);
-            color* lightShadow = new color[numLights];
-            vector3D* lightDirection = new vector3D[numLights];
             for(int i = 0; i < numLights; i++){
                 double distance = allLights[i]->distanceFromLight(intersectionPoint);
                 double newDistance = distance;
@@ -145,10 +149,7 @@ color raycaster::calculateRayEffect(vector3D ray){
                 if (newDistance < distance){lightShadow[i] = color(0.0,0.0,0.0);}
                 else{; lightShadow[i] = allLights[i]->getLightColor(distance);}
             }
-            color result = shapeMaterial->calculateColor(eye, intersectionPoint, allLights, lightShadow, lightDirection, numLights, normal);
-            delete[] lightShadow;
-            delete[] lightDirection;
-            return result;
+            return shapeMaterial->calculateColor(eye, intersectionPoint, allLights, lightShadow, lightDirection, numLights, normal);
         } else{return shapeMaterial->calculateColor();}
 
         

@@ -22,6 +22,8 @@ class raycaster{
     color* colorOut;
     lightsource** allLights;
     int numLights;
+    color* lightShadow;
+    vector3D* lightDirection;
 
     //These vectors forms the orthonormal basis for the viewplane
     vector3D orthoXBasis;

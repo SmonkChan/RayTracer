@@ -159,7 +159,11 @@ string cylinder::printShape(){
 }
 vector3D cylinder::findNormal(point3D intersection, point3D rayOrigin){
     vector3D sliceBasis = (intersection-center).crossProduct(upVector);
-    if(fabs((center-rayOrigin).magnitude()) > fabs((intersection-rayOrigin).magnitude())){
-        return upVector.crossProduct(sliceBasis).getNormalVector();
-    } else {return upVector.crossProduct(sliceBasis).getNormalVector().multiplyByScalar(-1);}
+    vector3D flattenedVector = upVector.crossProduct(sliceBasis).getNormalVector();
+    //std::cout << "flattenedVector " << flattenedVector.printVector() << std::endl;
+    //We need to calculate if this is hitting the inside or the outside of the cylinder
+    //This is done by calculating if the intersection point + the normal vector is closer or farther than the intersection point
+    //This is because if the normal vector is pointing away, it will make it farther than the intersection point so the vector should be inverted
+    if(((intersection+flattenedVector)-rayOrigin).magnitude() < ((intersection+(flattenedVector.multiplyByScalar(-1.0)))-rayOrigin).magnitude()){return flattenedVector;} 
+    else {return flattenedVector.multiplyByScalar(-1.0);}
 }

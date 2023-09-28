@@ -19,11 +19,6 @@ color::color(double r, double g, double b){
     green = g;
     blue = b;
 }
-color::color(unsigned char r, unsigned char g, unsigned char b){
-    red = r/255.0;
-    green = g/255.0;
-    blue = b/255.0;
-}
 color::color(const color& color2){
     *this = color2;
 }
@@ -37,8 +32,11 @@ void color::operator=(const color& color2){
 
 //Creates a string based on the Char data to easily print
 string color::getString(){
-    string r = to_string((int) (red*255));
-    string g = to_string((int) (green*255));
-    string b = to_string((int) (blue*255));
-    return r.append(" ").append(g).append(" ").append(b);
+    int r = (int)(red*255);
+    int g = (int)(green*255);
+    int b = (int)(blue*255);
+    if(r < 0){r = 0;}
+    if(g < 0){g = 0;}
+    if(b < 0){b = 0;}
+    return to_string(r).append(" ").append(to_string(g)).append(" ").append(to_string(b));
 }

@@ -85,6 +85,7 @@ void vector3D::normalize(){
 //Outputs a vector that is the normal vector of the input vector
 vector3D vector3D::getNormalVector(){
     double mag = magnitude();
+    if(mag == 0){return vector3D(v[0], v[1], v[2]);}
     return vector3D(v[0]/mag, v[1]/mag, v[2]/mag);
 }
 
