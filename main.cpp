@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string.h>
 #include <math.h>
+#include <sstream>
 
 #include "raycaster.h"
 #include "shape.h"
@@ -75,30 +76,30 @@ int main(int argc, char *argv[])
         //It matches whatever keyword with it's whatever data it contains
         while(infile >> strIn){
             if(strIn == "eye"){
-                cout << "reading eye" << endl;
+                //cout << "reading eye" << endl;
                 infile >> temp1 >> temp2 >> temp3;
                 eye = point3D(temp1, temp2, temp3);
             }
             else if(strIn == "viewdir"){
-                cout << "reading viewdir" << endl;
+                //cout << "reading viewdir" << endl;
                 infile >> temp1 >> temp2 >> temp3;
                 viewdir = vector3D(temp1, temp2, temp3);
             }
             else if(strIn == "updir"){
-                cout << "reading updir" << endl;
+                //cout << "reading updir" << endl;
                 infile >> temp1 >> temp2 >> temp3;
                 updir = vector3D(temp1, temp2, temp3);
             }
             else if(strIn == "fov"){
-                cout << "reading fov" << endl;
+                //cout << "reading fov" << endl;
                 infile >> fov;
             }
             else if(strIn == "imsize"){
-                cout << "reading imsize" << endl;
+                //cout << "reading imsize" << endl;
                 infile >> width >> height;
             }
             else if(strIn == "bkgcolor"){
-                cout << "reading bkgcolor" << endl;
+                //cout << "reading bkgcolor" << endl;
                 infile >> temp1 >> temp2 >> temp3;
                 if((temp1 > 1) || (temp1 < 0) || (temp2 > 1) || (temp2 < 0) || (temp3 > 1) || (temp3 < 0)){
                     cout << "Color values must be between 0 and 1 inclusive" << endl;
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
                 }
             }
             else if(strIn == "mtlcolor"){
-                cout << "Reading Phong Material" << endl;
+                //cout << "Reading Phong Material" << endl;
                 if(numMats == matlistSize){
                     matlistSize *= 2;
                     tempMats = new material*[listSize];
@@ -119,18 +120,28 @@ int main(int argc, char *argv[])
                     tempMats = nullptr;
                 }
                 double tempDoubles[10];
-                for(int i = 0; i < 10; i++){
-                    cout << "reading double number " << i << endl;
-                    infile >> tempDoubles[i];
+                string materialLine;
+                std::getline(infile, materialLine);
+                std::stringstream s(materialLine);
+                double readIn;
+                int numDoubles = 0;
+                while (s >> readIn){
+                    tempDoubles[numDoubles] = readIn;
+                    numDoubles++;
                 }
-                color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
-                color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
-                currMaterial = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
+                if(numDoubles == 3){
+                    currMaterial = new material(color(tempDoubles[0], tempDoubles[1], tempDoubles[2]));
+                }
+                else if(numDoubles == 10){
+                    color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
+                    color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
+                    currMaterial = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
+                }
                 allMaterials[numMats] = currMaterial;
                 numMats++;
             }
             else if(strIn == "sphere"){
-                cout << "Reading Sphere" << endl;
+                //cout << "Reading Sphere" << endl;
                 //The only thing really weird is these lines of code
                 //If the array that was alocated is full, it allocats a new array with double the size
                 if(numShapes == listSize){
@@ -150,7 +161,7 @@ int main(int argc, char *argv[])
                 numShapes++;
             }
             else if(strIn == "cylinder"){
-                cout << "Reading Cylinder" << endl;
+                //cout << "Reading Cylinder" << endl;
                 if(numShapes == listSize){
                     listSize *= 2;
                     tempList = new shape*[listSize];
@@ -175,7 +186,7 @@ int main(int argc, char *argv[])
                 cout << "Impliment parallel keyword" << endl;
             }
             else if(strIn == "light"){
-                cout << "Reading Light" << endl;
+                //cout << "Reading Light" << endl;
                 if(numLights == lightlistSize){
                     listSize *= 2;
                     lightsource** tempList = new lightsource*[lightlistSize];
@@ -193,12 +204,12 @@ int main(int argc, char *argv[])
                 color lightColor = color(r,g,b);
                 switch (lightType){
                 case 0:
-                    cout << "Read Directional Light" << endl;
+                    //cout << "Read Directional Light" << endl;
                     allLights[numLights] = new directional_light(vector3D(temp1, temp2, temp3), lightColor);
                     numLights++;
                     break;
                 case 1:
-                    cout << "read point light" << endl;
+                    //cout << "read point light" << endl;
                     allLights[numLights] = new point_light(point3D(temp1, temp2, temp3), lightColor);
                     numLights++;
                     break;
