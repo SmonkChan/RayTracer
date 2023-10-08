@@ -4,7 +4,7 @@ CXXFLAGS = -std=c++11 -g
 all: raycaster_app
 
 raycaster_app: main.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o
-	$(CXX) $(CXXFLAGS) main.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o -o raycaster_app.out
+	$(CXX) $(CXXFLAGS) main.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o -o raytracer.out
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
