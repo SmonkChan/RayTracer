@@ -38,13 +38,13 @@ color Phong_material::calculateColor(point3D rayOrigin, point3D intersection, li
         //then we calculate the the influence it has on the color of the pixel
         vector3D lightDir = lightDirection[i];
         double kdNL = specularD*normal.dotProduct(lightDir);
-        vector3D H = (lightDir + (rayOrigin-intersection)).multiplyByScalar(0.5);
+        vector3D H = (lightDir + ((rayOrigin-intersection).getNormalVector())).multiplyByScalar(0.5);
         double magnitude = H.magnitude();
         if(magnitude != 0){H = H.multiplyByScalar(1/magnitude);}
         double ksNH = specularS*pow(normal.dotProduct(H), specularExponent);
-        redComp += max(0,lightShadow->getRed()*(max(0,(baseColor.getRed()*kdNL)) + max(0, specularHighlight.getRed()*ksNH)));
-        greenComp += max(0,lightShadow->getGreen()*(max(0,(baseColor.getGreen()*kdNL)) + max(0, specularHighlight.getGreen()*ksNH)));
-        blueComp += max(0,lightShadow->getBlue()*(max(0,(baseColor.getBlue()*kdNL)) + max(0, specularHighlight.getBlue()*ksNH)));
+        redComp += max(0,lightShadow[i].getRed())*(max(0,(baseColor.getRed()*kdNL)) + max(0, specularHighlight.getRed()*ksNH));
+        greenComp += max(0,lightShadow[i].getGreen())*(max(0,(baseColor.getGreen()*kdNL)) + max(0, specularHighlight.getGreen()*ksNH));
+        blueComp += max(0,lightShadow[i].getBlue())*(max(0,(baseColor.getBlue()*kdNL)) + max(0, specularHighlight.getBlue()*ksNH));
     }
     if (redComp > 1){redComp = 1;}
     if (greenComp > 1){greenComp = 1;}
