@@ -2,89 +2,24 @@
 #include<iostream>
 #include "raycaster.h"
 
-raycaster::raycaster(point3D e, vector3D v, vector3D u, double f, double w, double h, color b, shape** a, int ns, lightsource** l, int nl){
-    eye = e;
-    viewdir = v;
-    updir = u;
-    fov = f;
-    imsizeWidth = w;
-    imsizeHeight = h;
-    bkgcolor = b;
-    allShapesList = a;
-    numShapes = ns;
-    allLights = l;
-    numLights = nl;
-
-
-    lightShadow = new color[numLights];
-    lightDirection = new vector3D[numLights];
-
-    //Defines an array to store the colors for the out file
-    colorOut = new color[imsizeWidth * imsizeHeight];
-
-    //Uses two functions to find other internal variables
-    getViewplaneBasis();
-    findBottomLeftPixel();
-    //printRaycaster();
+raycaster::raycaster(scene s){
+    enviroment = s;
 }
 
 raycaster::raycaster(const raycaster& copyray){
-    colorOut = NULL;
     *this = copyray;
 }
 
-raycaster::~raycaster(){
-    delete[] colorOut;
-    delete[] lightShadow;
-    delete[] lightDirection;
-}
+raycaster::~raycaster(){}
 
 void raycaster::operator=(const raycaster& copyray){
-    this->eye = copyray.eye;
-    this->viewdir = copyray.viewdir;
-    this->updir = copyray.updir;
-    this->fov = copyray.fov;
-    this->imsizeWidth = copyray.imsizeWidth;
-    this->imsizeHeight = copyray.imsizeHeight;
-    this->bkgcolor = copyray.bkgcolor;
-    this->allShapesList = copyray.allShapesList;
-    this->numShapes = copyray.numShapes;
-
-    delete[] colorOut;
-    this->colorOut = new color[imsizeWidth * imsizeHeight];
-    for (int i = 0; i < imsizeHeight*imsizeWidth; i++){
-        this->colorOut[i] = copyray.colorOut[i];
-    }
+    enviroment = copyray.enviroment;
 }
 /*
 This function is a helper function that uses the input values in order to calculate an orthogonal basis for the viewplane
 The two vectors that result are also length one pixel given that the eye direction vector is normalized
 */
-void raycaster::getViewplaneBasis(){
-    //First we normalize the view direction vector;
-    viewdir.normalize();
-    orthoXBasis = viewdir.crossProduct(updir);
-    orthoXBasis.normalize();
-    orthoYBasis = orthoXBasis.crossProduct(viewdir);
 
-    viewPlaneHeight = 2*tan((fov*M_PI/180)/2);
-    pixelLength = viewPlaneHeight/(imsizeHeight-1);
-    viewPlaneWidth = pixelLength*(imsizeWidth-1);
-    horiPixelChange = orthoXBasis.multiplyByScalar(pixelLength);
-    vertPixelChange = orthoYBasis.multiplyByScalar(pixelLength);
-    //By this point we should have two vectors that have the length of a pixel in our view plane
-    //Given that the viewplane is 1 unit away from the eye
-    //These two vectors form an orthagonal basis for the viewplane
-}
-/*
-Because we already found the basis for the viewplane, we use that to find the vector that is pointing at the bottom left corner
-This is used to easily cast all of the rays
-*/
-void raycaster::findBottomLeftPixel(){
-    //finds the vector that points to the bottom left corner
-    bottomVector = viewdir+(orthoXBasis.multiplyByScalar(-viewPlaneWidth/2));
-    bottomVector = bottomVector+(orthoYBasis.multiplyByScalar(-viewPlaneHeight/2));
-}
 
 /*
 PARAMETERS:
@@ -150,9 +85,7 @@ color raycaster::calculateRayEffect(vector3D ray){
                 else{; lightShadow[i] = allLights[i]->getLightColor(distance);}
             }
             return shapeMaterial->calculateColor(eye, intersectionPoint, allLights, lightShadow, lightDirection, numLights, normal);
-        } else{return shapeMaterial->calculateColor();}
-
-        
+        } else{return shapeMaterial->calculateColor();}     
     } else{return bkgcolor;}
 }
 
