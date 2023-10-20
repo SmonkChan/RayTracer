@@ -12,14 +12,6 @@ shape::shape(const shape& shape2){
 
 material* shape::getColor(){return texture;}
 
-//Print all the data about a shape as a string;
-string shape::printShape(){
-    string out;
-    out.append("Default Shape Object\n");
-    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
-    return out;
-}
-
 //Constructors for a sphere
 sphere::sphere(){}
 //sphere is defined with a center point, radius and material color
@@ -82,14 +74,6 @@ double sphere::intersects(point3D origin, vector3D ray){
         return (-B-sqrt(discriminant))/2;
     } else {return (-B+sqrt(discriminant))/2;}
 }
-string sphere::printShape(){
-    string out;
-    out.append("Sphere\n");
-    out.append("center: ").append(center.printPoint()).append("\n");
-    out.append("raidus: ").append(to_string(radius)).append("\n");
-    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
-    return out;
-}
 vector3D sphere::findNormal(point3D intersection, point3D rayOrigin){
     return (intersection-center).getNormalVector();
 }
@@ -146,16 +130,6 @@ double cylinder::intersects(point3D origin, vector3D ray){
     }else if(option1<option2 && option1>0.00000001){
         return option1;
     } else{return option2;}
-}
-string cylinder::printShape(){
-    string out;
-    out.append("Cylinder\n");
-    out.append("center: ").append(center.printPoint()).append("\n");
-    out.append("upVector: ").append(upVector.printVector()).append("\n");
-    out.append("raidus: ").append(to_string(radius)).append("\n");
-    out.append("length: ").append(to_string(length)).append("\n");
-    out.append("material: ").append(texture->calculateColor().getString()).append("\n");
-    return out;
 }
 vector3D cylinder::findNormal(point3D intersection, point3D rayOrigin){
     vector3D sliceBasis = (intersection-center).crossProduct(upVector);

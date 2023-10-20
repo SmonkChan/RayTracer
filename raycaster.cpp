@@ -29,7 +29,6 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, sc
 color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene environment){
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
-    //std::cout << "intersectionDistance " << intersectionDistance << std::endl;
     if(intersectionDistance == INFINITY){
         return environment.bkgcolor;   
     } 

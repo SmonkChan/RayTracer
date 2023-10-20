@@ -6,8 +6,8 @@
 #include "color.h"
 #include "point.h"
 #include "lightsource.h"
-#include "raycaster.h"
 #include "scene.h"
+#include "raycaster.h"
 
 class material
 {

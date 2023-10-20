@@ -19,7 +19,6 @@ class shape
     shape(const shape& shape2);
     material* getColor();
     virtual double intersects(point3D rayOrigin, vector3D ray) = 0;
-    virtual std::string printShape();
     virtual vector3D findNormal(point3D p, point3D originPoint) = 0;
 };
 
@@ -35,7 +34,6 @@ class sphere : public shape
     sphere(point3D c, double r, material* m);
     void operator=(const sphere &sphere2);
     double intersects(point3D rayOrigin, vector3D ray);
-    std::string printShape();
     virtual vector3D findNormal(point3D p, point3D rayOrigin);
 };
 
@@ -53,7 +51,6 @@ class cylinder : public shape
     cylinder(point3D c, vector3D v, double r, double l, material* m);
     void operator=(const cylinder &shape2);
     double intersects(point3D rayOrigin, vector3D ray);
-    std::string printShape();
     virtual vector3D findNormal(point3D intersection, point3D rayOrigin);
 };
 #endif

@@ -1,13 +1,13 @@
 #ifndef RAYCASTER_H
 #define RAYCASTER_H
 
-#include "shape.h"
 #include "vector.h"
 #include "point.h"
 #include "color.h"
 #include "material.h"
 #include "lightsource.h"
 #include "scene.h"
+#include "shape.h"
 
 class raycaster{
     public:

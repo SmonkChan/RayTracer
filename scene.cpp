@@ -1,17 +1,20 @@
 #include "scene.h"
+#include "shape.h"
+#include "material.h"
+#include "lightsource.h"
 
 scene::scene(){
     shapeListSize = 4;
     numShapes = 0;
-    shape** allShapeList = new shape*[shapeListSize];
+    shape** allShapeList = new shape*[4];
 
-    int matlistSize = 4;
-    int numMats = 0;
-    allMaterialsList = new material*[matlistSize];
+    matListSize = 4;
+    numMats = 0;
+    allMaterialsList = new material*[4];
 
-    int lightlistSize = 4;
-    int numLights = 0;
-    allLights = new lightsource*[lightListSize];
+    lightListSize = 4;
+    numLights = 0;
+    allLights = new lightsource*[4];
 
     bkgcolor = color(0,0,0);
 }

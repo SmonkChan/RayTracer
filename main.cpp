@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     }
 
     //An enviroment to store the scene in
-    scene environment = scene();
+    scene environment;
 
     //variables to store for the camera
     point3D eye;
@@ -119,7 +119,6 @@ int main(int argc, char *argv[])
                 double z;
                 double r;
                 infile >> x >> y >> z >> r;
-                material* currMaterial = currMaterial;
                 environment.addShape(new sphere(point3D(x, y, z), r, currMaterial));
             }
             else if(strIn == "cylinder"){
@@ -132,7 +131,6 @@ int main(int argc, char *argv[])
                 double r;
                 double h;
                 infile >> px >> py >> pz >> vx >> vy >> vz >> r >> h;
-                material* currMaterial = currMaterial;
                 environment.addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
             }
             else if(strIn == "parallel"){
