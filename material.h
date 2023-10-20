@@ -6,6 +6,8 @@
 #include "color.h"
 #include "point.h"
 #include "lightsource.h"
+#include "raycaster.h"
+#include "scene.h"
 
 class material
 {
@@ -14,9 +16,7 @@ class material
     color baseColor;
     public:
     material(color base = color());
-    virtual color calculateColor();
-    virtual color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
-    virtual int materialType(){return 0;}
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment);
 };
 
 class Phong_material : public material 
@@ -30,8 +30,7 @@ class Phong_material : public material
 
     public:
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
-    color calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal);
-    int materialType(){return 1;}
+    color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment);
 };
 
 #endif

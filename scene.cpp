@@ -12,6 +12,8 @@ scene::scene(){
     int lightlistSize = 4;
     int numLights = 0;
     allLights = new lightsource*[lightListSize];
+
+    bkgcolor = color(0,0,0);
 }
 
 scene::scene(const scene& copyScene){
@@ -62,17 +64,17 @@ void scene::operator=(const scene& copyScene){
 
 scene::~scene(){
     for(int i = 0; i > numShapes; i++){
-            delete allShapesList[i];
-        } 
-        delete[] allShapesList;
-        for(int i = 0; i < numMats; i++){
-            delete allMaterialsList[i];
-        }
-        delete[] allMaterialsList;
-        for(int i = 0; i < numLights; i++){
-            delete allLights[i];
-        }
-        delete[] allLights;
+        delete allShapesList[i];
+    } 
+    delete[] allShapesList;
+    for(int i = 0; i < numMats; i++){
+        delete allMaterialsList[i];
+    }
+    delete[] allMaterialsList;
+    for(int i = 0; i < numLights; i++){
+        delete allLights[i];
+    }
+    delete[] allLights;
 }
 
 void scene::addShape(shape* newShape){
@@ -115,64 +117,4 @@ void scene::addMaterial(material* newMaterial){
     }
     allMaterialsList[numMats] = newMaterial;
     numMats++;
-    currMaterial = newMaterial;
-}
-
-
-
-camera::camera(point3D e, vector3D v, vector3D u, double f, int w, int h){
-    eye = e;
-    viewdir = v;
-    updir = u;
-    fov = f;
-    imsizeWidth = w;
-    imsizeHeight = h;
-    getViewplane();
-}
-
-camera::camera(const camera& copyCamera){
-    eye = copyCamera.eye;
-    viewdir = copyCamera.viewdir;
-    updir = copyCamera.updir;
-    fov = copyCamera.fov;
-    imsizeWidth = copyCamera.imsizeWidth;
-    vertPixelChange = copyCamera.vertPixelChange;
-    horiPixelChange = copyCamera.horiPixelChange;
-    bottomVector = copyCamera.bottomVector;
-    colorOut = copyCamera.colorOut;
-}
-
-camera::~camera(){
-    delete[] colorOut;
-}
-
-void camera::operator=(const camera& copyCamera){
-    eye = copyCamera.eye;
-    viewdir = copyCamera.viewdir;
-    updir = copyCamera.updir;
-    fov = copyCamera.fov;
-    imsizeWidth = copyCamera.imsizeWidth;
-    vertPixelChange = copyCamera.vertPixelChange;
-    horiPixelChange = copyCamera.horiPixelChange;
-    bottomVector = copyCamera.bottomVector;
-    colorOut = copyCamera.colorOut;
-}
-
-bool camera::isInvalid(){
-    return (viewdir.isNullVector() || updir.isNullVector() || viewdir.isColinear(updir));
-}
-
-void camera::getViewplane(){
-    //First we normalize the view direction vector;
-    viewdir.normalize();
-    vector3D orthoXBasis = viewdir.crossProduct(updir);
-    orthoXBasis.normalize();
-    vector3D orthoYBasis = orthoXBasis.crossProduct(viewdir);
-    double viewPlaneHeight = 2*tan((fov*M_PI/180)/2);
-    double pixelLength = viewPlaneHeight/(imsizeHeight-1);
-    double viewPlaneWidth = pixelLength*(imsizeWidth-1);
-    horiPixelChange = orthoXBasis.multiplyByScalar(pixelLength);
-    vertPixelChange = orthoYBasis.multiplyByScalar(pixelLength);
-    bottomVector = viewdir+(orthoXBasis.multiplyByScalar(-viewPlaneWidth/2));
-    bottomVector = bottomVector+(orthoYBasis.multiplyByScalar(-viewPlaneHeight/2));
 }

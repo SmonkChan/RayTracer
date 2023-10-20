@@ -12,6 +12,7 @@
 #include "material.h"
 #include "lightsource.h"
 #include "scene.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -26,8 +27,17 @@ int main(int argc, char *argv[])
     }
 
     //An enviroment to store the scene in
-    scene enviroment = scene();
+    scene environment = scene();
 
+    //variables to store for the camera
+    point3D eye;
+    vector3D viewdir;
+    vector3D updir;
+    double fov;
+    int width;
+    int height;
+
+    material* currMaterial;
     //A bunch of temp variables to help parse the file
     string strIn;
 
@@ -44,33 +54,27 @@ int main(int argc, char *argv[])
                 double y;
                 double z;
                 infile >> x >> y >> z;
-                enviroment.setEye(point3D(x, y, z));
+                eye = point3D(x, y, z);
             }
             else if(strIn == "viewdir"){
                 double x;
                 double y;
                 double z;
                 infile >> x >> y >> z;
-                enviroment.setViewDirection(vector3D(x, y, z));
+                viewdir = vector3D(x, y, z);
             }
             else if(strIn == "updir"){
                 double x;
                 double y;
                 double z;
                 infile >> x >> y >> z;
-                enviroment.setUpDirection(vector3D(x, y, z));
+                updir = vector3D(x, y, z);
             }
             else if(strIn == "fov"){
-                double fov;
                 infile >> fov;
-                enviroment.setFOV(fov);
             }
             else if(strIn == "imsize"){
-                int width;
-                int height;
                 infile >> width >> height;
-                enviroment.setImageWidth(width);
-                enviroment.setImageHeight(height);
             }
             else if(strIn == "bkgcolor"){
                 double r;
@@ -81,11 +85,10 @@ int main(int argc, char *argv[])
                     cout << "Color values must be between 0 and 1 inclusive" << endl;
                 }
                 else {
-                    enviroment.setBackgroundColor(color(r, g, b));
+                    environment.setBackgroundColor(color(r, g, b));
                 }
             }
             else if(strIn == "mtlcolor"){
-                material* currMaterial;
                 double tempDoubles[10];
                 string materialLine;
                 std::getline(infile, materialLine);
@@ -108,7 +111,7 @@ int main(int argc, char *argv[])
                     cout << "invalid material";
                     break;
                 }
-                enviroment.addMaterial(currMaterial);
+                environment.addMaterial(currMaterial);
             }
             else if(strIn == "sphere"){
                 double x;
@@ -116,8 +119,8 @@ int main(int argc, char *argv[])
                 double z;
                 double r;
                 infile >> x >> y >> z >> r;
-                material* currMaterial = enviroment.getCurrMaterial();
-                enviroment.addShape(new sphere(point3D(x, y, z), r, currMaterial));
+                material* currMaterial = currMaterial;
+                environment.addShape(new sphere(point3D(x, y, z), r, currMaterial));
             }
             else if(strIn == "cylinder"){
                 double px;
@@ -129,8 +132,8 @@ int main(int argc, char *argv[])
                 double r;
                 double h;
                 infile >> px >> py >> pz >> vx >> vy >> vz >> r >> h;
-                material* currMaterial = enviroment.getCurrMaterial();
-                enviroment.addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
+                material* currMaterial = currMaterial;
+                environment.addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
             }
             else if(strIn == "parallel"){
                 cout << "Impliment parallel keyword" << endl;
@@ -147,10 +150,10 @@ int main(int argc, char *argv[])
                 color lightColor = color(r,g,b);
                 switch (lightType){
                 case 0:
-                    enviroment.addLight(new directional_light(vector3D(x, y, z), lightColor));
+                    environment.addLight(new directional_light(vector3D(x, y, z), lightColor));
                     break;
                 case 1:
-                    enviroment.addLight(new point_light(point3D(x, y, z), lightColor));
+                    environment.addLight(new point_light(point3D(x, y, z), lightColor));
                     break;
                 default:
                     cout << "Invalid light type" << endl;
@@ -167,9 +170,11 @@ int main(int argc, char *argv[])
         cout << "Unable to open file " << argv[1] << endl;
         return -1;
     }
+    camera cam = camera(eye, viewdir, updir, fov, width, height, environment);
+
     //If either given vector is a null vector or they are colinear, stop the program
-    if(enviroment.isInvalid()){
-        cout << "Vectors given are invalid" << endl;
+    if(cam.isInvalid()){
+        cout << "View and up directions are invalid" << endl;
         return -1;
     }
 
@@ -188,7 +193,7 @@ int main(int argc, char *argv[])
         
         //this is where the printing out the image
         //This has to be build from bottom to top because the rays start at the bottom left corner
-        color* image = rays.getColors();
+        color* image = cam.getColors();
         for(int j = height-1; j >= 0; j--){
             for(int i = 0; i < width; i++){
                 outfile << image[j*width+i].getString() << endl;

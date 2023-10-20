@@ -4,11 +4,7 @@ material::material(color base){
     baseColor = base;
 }
 
-color material::calculateColor(){
-    return baseColor;
-}
-
-color material::calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal){
+color material::calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment){
     return baseColor;
 }
 
@@ -26,25 +22,35 @@ double max(double x, double y){
     else{return y;}
 }
 
-color Phong_material::calculateColor(point3D rayOrigin, point3D intersection, lightsource** allLights, color* lightShadow, vector3D* lightDirection, int numLights, vector3D normal){
+color Phong_material::calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment){
 
     //Cacluating the ambient lighting as a base color
     double redComp = (specularA*baseColor.getRed());
     double greenComp = (specularA*baseColor.getGreen());
     double blueComp = (specularA*baseColor.getBlue());
 
-    for(int i = 0; i < numLights; i++){
+    raycaster raycaster;
+    for(int i = 0; i < environment.numLights; i++){
         //for each light source we check if there is a shadow
         //then we calculate the the influence it has on the color of the pixel
-        vector3D lightDir = lightDirection[i];
+        vector3D lightDir = environment.allLights[i]->getLightDirection(intersection);
+        double distance = environment.allLights[i]->distanceFromLight(intersection);
+        raycaster.shootRay(intersection, lightDir, distance, environment);
+        color lightShadow;
+        if(distance < environment.allLights[i]->distanceFromLight(intersection)){
+            lightShadow = color(0,0,0);
+        }
+        else{
+            lightShadow = environment.allLights[i]->getLightColor(distance);
+        }
         double kdNL = specularD*normal.dotProduct(lightDir);
         vector3D H = (lightDir + ((rayOrigin-intersection).getNormalVector())).multiplyByScalar(0.5);
         double magnitude = H.magnitude();
         if(magnitude != 0){H = H.multiplyByScalar(1/magnitude);}
         double ksNH = specularS*pow(normal.dotProduct(H), specularExponent);
-        redComp += max(0,lightShadow[i].getRed())*(max(0,(baseColor.getRed()*kdNL)) + max(0, specularHighlight.getRed()*ksNH));
-        greenComp += max(0,lightShadow[i].getGreen())*(max(0,(baseColor.getGreen()*kdNL)) + max(0, specularHighlight.getGreen()*ksNH));
-        blueComp += max(0,lightShadow[i].getBlue())*(max(0,(baseColor.getBlue()*kdNL)) + max(0, specularHighlight.getBlue()*ksNH));
+        redComp += max(0,lightShadow.getRed())*(max(0,(baseColor.getRed()*kdNL)) + max(0, specularHighlight.getRed()*ksNH));
+        greenComp += max(0,lightShadow.getGreen())*(max(0,(baseColor.getGreen()*kdNL)) + max(0, specularHighlight.getGreen()*ksNH));
+        blueComp += max(0,lightShadow.getBlue())*(max(0,(baseColor.getBlue()*kdNL)) + max(0, specularHighlight.getBlue()*ksNH));
     }
     if (redComp > 1){redComp = 1;}
     if (greenComp > 1){greenComp = 1;}
