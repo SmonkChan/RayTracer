@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     }
 
     //An enviroment to store the scene in
-    scene environment;
+    scene* environment = new scene();
 
     //variables to store for the camera
     point3D eye;
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
                     cout << "Color values must be between 0 and 1 inclusive" << endl;
                 }
                 else {
-                    environment.setBackgroundColor(color(r, g, b));
+                    environment->setBackgroundColor(color(r, g, b));
                 }
             }
             else if(strIn == "mtlcolor"){
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
                     cout << "invalid material";
                     break;
                 }
-                environment.addMaterial(currMaterial);
+                environment->addMaterial(currMaterial);
             }
             else if(strIn == "sphere"){
                 double x;
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
                 double z;
                 double r;
                 infile >> x >> y >> z >> r;
-                environment.addShape(new sphere(point3D(x, y, z), r, currMaterial));
+                environment->addShape(new sphere(point3D(x, y, z), r, currMaterial));
             }
             else if(strIn == "cylinder"){
                 double px;
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
                 double r;
                 double h;
                 infile >> px >> py >> pz >> vx >> vy >> vz >> r >> h;
-                environment.addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
+                environment->addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
             }
             else if(strIn == "parallel"){
                 cout << "Impliment parallel keyword" << endl;
@@ -148,10 +148,10 @@ int main(int argc, char *argv[])
                 color lightColor = color(r,g,b);
                 switch (lightType){
                 case 0:
-                    environment.addLight(new directional_light(vector3D(x, y, z), lightColor));
+                    environment->addLight(new directional_light(vector3D(x, y, z), lightColor));
                     break;
                 case 1:
-                    environment.addLight(new point_light(point3D(x, y, z), lightColor));
+                    environment->addLight(new point_light(point3D(x, y, z), lightColor));
                     break;
                 default:
                     cout << "Invalid light type" << endl;

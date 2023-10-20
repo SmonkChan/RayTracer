@@ -6,7 +6,7 @@
 scene::scene(){
     shapeListSize = 4;
     numShapes = 0;
-    shape** allShapeList = new shape*[4];
+    allShapesList = new shape*[4];
 
     matListSize = 4;
     numMats = 0;
@@ -17,52 +17,6 @@ scene::scene(){
     allLights = new lightsource*[4];
 
     bkgcolor = color(0,0,0);
-}
-
-scene::scene(const scene& copyScene){
-    this->~scene();
-    bkgcolor = copyScene.bkgcolor;
-    shapeListSize = copyScene.shapeListSize;
-    allShapesList = new shape*[shapeListSize];
-    numShapes = copyScene.numShapes;
-    for(int i =0; i < numShapes; i++){
-        allShapesList[i] = copyScene.allShapesList[i];
-    }
-    matListSize = copyScene.matListSize;
-    allMaterialsList = new material*[matListSize];
-    numMats = copyScene.numMats;
-    for(int i =0; i < numMats; i++){
-        allMaterialsList[i] = copyScene.allMaterialsList[i];
-    }
-    lightListSize = copyScene.lightListSize;
-    allLights = new lightsource*[shapeListSize];
-    numLights = copyScene.numLights;
-    for(int i =0; i < numLights; i++){
-        allLights[i] = copyScene.allLights[i];
-    }
-}
-
-void scene::operator=(const scene& copyScene){
-    this->~scene();
-    bkgcolor = copyScene.bkgcolor;
-    shapeListSize = copyScene.shapeListSize;
-    allShapesList = new shape*[shapeListSize];
-    numShapes = copyScene.numShapes;
-    for(int i =0; i < numShapes; i++){
-        allShapesList[i] = copyScene.allShapesList[i];
-    }
-    matListSize = copyScene.matListSize;
-    allMaterialsList = new material*[matListSize];
-    numMats = copyScene.numMats;
-    for(int i =0; i < numMats; i++){
-        allMaterialsList[i] = copyScene.allMaterialsList[i];
-    }
-    lightListSize = copyScene.lightListSize;
-    allLights = new lightsource*[shapeListSize];
-    numLights = copyScene.numLights;
-    for(int i =0; i < numLights; i++){
-        allLights[i] = copyScene.allLights[i];
-    }
 }
 
 scene::~scene(){
@@ -81,7 +35,7 @@ scene::~scene(){
 }
 
 void scene::addShape(shape* newShape){
-    if(numShapes == shapeListSize){
+    if(numShapes >= shapeListSize){
         shapeListSize *= 2;
         shape** tempList = new shape*[shapeListSize];
         for(int i = 0; i < numShapes; i++){

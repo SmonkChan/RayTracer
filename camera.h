@@ -12,7 +12,7 @@
 
 
 class camera{
-    scene environment;
+    scene* environment;
     point3D eye;
     vector3D viewdir;
     vector3D updir;
@@ -28,10 +28,8 @@ class camera{
     void getViewplane();
 
     public:
-    camera(point3D eye, vector3D viewdir, vector3D updir, double fov, int width, int height, scene environment);
+    camera(point3D eye, vector3D viewdir, vector3D updir, double fov, int width, int height, scene* environment);
     ~camera();
-    camera(const camera& copyCamera);
-    void operator=(const camera& copyCamera);
     int getSceneWidth(){return imsizeWidth;}
     int getSceneHeight(){return imsizeHeight;}
     bool isInvalid();

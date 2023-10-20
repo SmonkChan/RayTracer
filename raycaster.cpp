@@ -13,29 +13,30 @@ This function takes a ray and then tests to see if it intersects with any shape
 If it does, it keeps track of the distance and the shape that it intersected
 It then returns the shape that the ray intersected at the closes point
 */
-shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, scene environment){
+shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, scene* environment){
     shape* closestShape = NULL;
     point3D intsecPoint;
-    for(int i = 0; i < environment.numShapes; i++){
-        double tempdist = environment.allShapesList[i]->intersects(origin, ray);
+    for(int i = 0; i < environment->numShapes; i++){
+        double tempdist = environment->allShapesList[i]->intersects(origin, ray);
         if((tempdist > 0.00000001) && (tempdist < minDistance)){
             minDistance = tempdist;
-            closestShape = environment.allShapesList[i];
+            closestShape = environment->allShapesList[i];
         }
     }
     return closestShape;
 }
 
-color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene environment){
+color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene* environment){
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
-    if(intersectionDistance == INFINITY){
-        return environment.bkgcolor;   
-    } 
-    else{
+    if(intersectionDistance < INFINITY){
+        return environment->bkgcolor;
         material* shapeMaterial = shapeIntersection->getColor();
         point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
         vector3D normal = shapeIntersection->findNormal(intersectionPoint, origin);
         return shapeMaterial->calculateColor(origin, intersectionPoint, normal, environment); 
+    } 
+    else{
+        return environment->bkgcolor;   
     }
 }

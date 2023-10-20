@@ -1,6 +1,6 @@
 #include "camera.h"
 
-camera::camera(point3D e, vector3D v, vector3D u, double f, int w, int h, scene envi){
+camera::camera(point3D e, vector3D v, vector3D u, double f, int w, int h, scene* envi){
     eye = e;
     viewdir = v;
     updir = u;
@@ -11,34 +11,11 @@ camera::camera(point3D e, vector3D v, vector3D u, double f, int w, int h, scene 
     if(!isInvalid()){
         getViewplane();
     }
-}
-
-camera::camera(const camera& copyCamera){
-    eye = copyCamera.eye;
-    viewdir = copyCamera.viewdir;
-    updir = copyCamera.updir;
-    fov = copyCamera.fov;
-    imsizeWidth = copyCamera.imsizeWidth;
-    vertPixelChange = copyCamera.vertPixelChange;
-    horiPixelChange = copyCamera.horiPixelChange;
-    bottomVector = copyCamera.bottomVector;
-    colorOut = copyCamera.colorOut;
+    colorOut = new color[imsizeWidth*imsizeHeight];
 }
 
 camera::~camera(){
     delete[] colorOut;
-}
-
-void camera::operator=(const camera& copyCamera){
-    eye = copyCamera.eye;
-    viewdir = copyCamera.viewdir;
-    updir = copyCamera.updir;
-    fov = copyCamera.fov;
-    imsizeWidth = copyCamera.imsizeWidth;
-    vertPixelChange = copyCamera.vertPixelChange;
-    horiPixelChange = copyCamera.horiPixelChange;
-    bottomVector = copyCamera.bottomVector;
-    colorOut = copyCamera.colorOut;
 }
 
 bool camera::isInvalid(){
@@ -60,12 +37,12 @@ void camera::getViewplane(){
 }
 
 void camera::castAllRays(){
-    raycaster raycaster;
+    raycaster rays = raycaster();
     for(int j =0; j < imsizeHeight; j++){
         for(int i =0; i < imsizeWidth; i++){
             vector3D ray = bottomVector+(horiPixelChange.multiplyByScalar(i))+(vertPixelChange.multiplyByScalar(j));
             ray.normalize();
-            colorOut[(j*imsizeWidth)+i] = raycaster.calculateRayEffect(eye, ray, environment);
+            colorOut[(j*imsizeWidth)+i] = rays.calculateRayEffect(eye, ray, environment);
         }
     }
 }

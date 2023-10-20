@@ -23,8 +23,6 @@ class scene {
 
     scene();
     ~scene();
-    scene(const scene& copyScene);
-    void operator=(const scene& copyScene);
     void addShape(shape* newShape);
     void addLight(lightsource* newLight);
     void addMaterial(material* newMaterial);

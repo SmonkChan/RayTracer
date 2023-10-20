@@ -16,7 +16,7 @@ class material
     color baseColor;
     public:
     material(color base = color());
-    virtual color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment);
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene* environment);
 };
 
 class Phong_material : public material 
@@ -30,7 +30,7 @@ class Phong_material : public material
 
     public:
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
-    color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene environment);
+    color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene* environment);
 };
 
 #endif
