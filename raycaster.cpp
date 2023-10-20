@@ -15,7 +15,6 @@ It then returns the shape that the ray intersected at the closes point
 */
 shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, scene* environment){
     shape* closestShape = NULL;
-    point3D intsecPoint;
     for(int i = 0; i < environment->numShapes; i++){
         double tempdist = environment->allShapesList[i]->intersects(origin, ray);
         if((tempdist > 0.00000001) && (tempdist < minDistance)){
@@ -30,7 +29,6 @@ color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
     if(intersectionDistance < INFINITY){
-        return environment->bkgcolor;
         material* shapeMaterial = shapeIntersection->getColor();
         point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
         vector3D normal = shapeIntersection->findNormal(intersectionPoint, origin);

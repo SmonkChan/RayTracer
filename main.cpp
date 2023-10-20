@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     camera cam = camera(eye, viewdir, updir, fov, width, height, environment);
-
+    cam.castAllRays();
     //If either given vector is a null vector or they are colinear, stop the program
     if(cam.isInvalid()){
         cout << "View and up directions are invalid" << endl;
