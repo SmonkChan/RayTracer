@@ -1,16 +1,17 @@
 #include "triangle.h"
 #include <math.h>
 
-flatTriangle::flatTriangle(point3D* vertex1, point3D* vertex2, point3D* vertex3){
+flatTriangle::flatTriangle(point3D* vertex1, point3D* vertex2, point3D* vertex3, material* mat){
     p1 = vertex1;
     p2 = vertex2;
     p3 = vertex3;
     vector3D e1 = (*p2-*p1);
     vector3D e2 = (*p3-*p1);
     planarNormal = e1.crossProduct(e2);
+    texture = mat;
 }
 
-smoothTriangle::smoothTriangle(point3D* vertex1, vector3D* normal1, point3D* vertex2, vector3D* normal2, point3D* vertex3, vector3D* normal3){
+smoothTriangle::smoothTriangle(point3D* vertex1, vector3D* normal1, point3D* vertex2, vector3D* normal2, point3D* vertex3, vector3D* normal3, material* mat){
     p1 = vertex1;
     p2 = vertex2;
     p3 = vertex3;
@@ -20,6 +21,7 @@ smoothTriangle::smoothTriangle(point3D* vertex1, vector3D* normal1, point3D* ver
     vector3D e1 = (*p2-*p1);
     vector3D e2 = (*p3-*p1);
     planarNormal = e1.crossProduct(e2);
+    texture = mat;
 }
 
 double triangle::intersects(point3D origin, vector3D ray){

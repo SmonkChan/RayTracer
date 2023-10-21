@@ -3,8 +3,8 @@ CXXFLAGS = -std=c++11 -g
 
 all: raycaster_app
 
-raycaster_app: main.o camera.o scene.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o
-	$(CXX) $(CXXFLAGS) main.o camera.o scene.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o -o raytracer.out 
+raycaster_app: main.o camera.o scene.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o triangle.o
+	$(CXX) $(CXXFLAGS) main.o camera.o scene.o raycaster.o shape.o point.o vector.o color.o material.o lightsource.o triangle.o -o raytracer.out 
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
@@ -35,6 +35,9 @@ scene.o: scene.cpp
 
 camera.o: camera.cpp
 	$(CXX) $(CXXFLAGS) -c camera.cpp -o camera.o
+
+triangle.o: triangle.cpp
+	$(CXX) $(CXXFLAGS) -c triangle.cpp -o triangle.o
 
 clean:
 	rm -f *.o *.ppm raycaster_app.out ./TestImages/*.ppm

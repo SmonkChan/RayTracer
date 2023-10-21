@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <sstream>
+#include <stdexcept>
 
 #include "raycaster.h"
 #include "shape.h"
@@ -81,12 +82,7 @@ int main(int argc, char *argv[])
                 double g;
                 double b;
                 infile >> r >> g >> b;
-                if((r > 1) || (r < 0) || (g > 1) || (g < 0) || (b > 1) || (b < 0)){
-                    cout << "Color values must be between 0 and 1 inclusive" << endl;
-                }
-                else {
-                    environment->setBackgroundColor(color(r, g, b));
-                }
+                environment->setBackgroundColor(color(r, g, b));
             }
             else if(strIn == "mtlcolor"){
                 double tempDoubles[10];
@@ -134,7 +130,7 @@ int main(int argc, char *argv[])
                 environment->addShape(new cylinder(point3D(px, py, pz), vector3D(vx, vy, vz), r, h, currMaterial));
             }
             else if(strIn == "parallel"){
-                cout << "Impliment parallel keyword" << endl;
+                throw invalid_argument("parallel keyword not implimented");
             }
             else if(strIn == "light"){
                 double x;
@@ -154,7 +150,7 @@ int main(int argc, char *argv[])
                     environment->addLight(new point_light(point3D(x, y, z), lightColor));
                     break;
                 default:
-                    cout << "Invalid light type" << endl;
+                    throw invalid_argument("Light types must be 0 or 1");
                     break;
                 }
             }
@@ -167,18 +163,73 @@ int main(int argc, char *argv[])
             }
             else if(strIn == "f"){
                 string instring;
-                string nums[9];
+                int nums[] = {0,0,0,0,0,0,0,0,0};
                 getline(infile, instring);
                 int j = 0;
-                for(int i = 0; i < 0; i++){
-                    nums[i] = "";
-                    while((instring.at(j) != '/') && (instring.at(j) != ' ') && (instring.at(j) != EOF)){
-                        nums[i]+instring.at(j);
-                        j++;
+                int faceType = 0;
+                for(int i = 1; i < instring.length(); i++){
+                    switch(instring.at(i)){
+                        case '0':
+                            nums[j] = nums[j]*10 + 0;
+                            break;
+                        case '1':
+                            nums[j] = nums[j]*10 + 1;
+                            break;
+                        case '2':
+                            nums[j] = nums[j]*10 + 2;
+                            break;
+                        case '3':
+                            nums[j] = nums[j]*10 + 3;
+                            break;
+                        case '4':
+                            nums[j] = nums[j]*10 + 4;
+                            break;
+                        case '5':
+                            nums[j] = nums[j]*10 + 5;
+                            break;
+                        case '6':
+                            nums[j] = nums[j]*10 + 6;
+                            break;
+                        case '7':
+                            nums[j] = nums[j]*10 + 7;
+                            break;
+                        case '8':
+                            nums[j] = nums[j]*10 + 8;
+                            break;
+                        case '9':
+                            nums[j] = nums[j]*10 + 9;
+                            break;
+                        case '/':
+                            if(instring.at(i+1) == '/'){
+                                faceType = 1;
+                            }
+                        case ' ':
+                            j++;
+                            break;
+                        default:
+                            throw invalid_argument("Invalid triangle face type");
+                            break;
                     }
-                    j++;
                 }
-                environment->addFace(stoi(nums[0]), stoi(nums[1]), stoi(nums[2]));
+                j++;
+                /**
+                 *cout << "parsing result " << endl;
+                 *for(int i = 0; i < 9; i++){
+                 *    cout << "nums[" << i << "] = " << nums[i] << endl;
+                 *}
+                 */
+                if(j == 3){
+                    environment->addFlatFace(nums, currMaterial);
+                } else if((j == 6) && (faceType == 1)){
+                    environment->addSmoothFace(nums, currMaterial);
+                } else if((j == 6) && (faceType == 0)){
+                    environment->addTexturedFlatFace(nums, currMaterial);
+                } else if(j == 9){
+                    environment->addTexturedSmoothFace(nums, currMaterial);
+                }
+                else {
+                    cout << "face failed to read" << endl;
+                }
             }
             else if(strIn == "vn"){
                 double x;
@@ -198,7 +249,6 @@ int main(int argc, char *argv[])
         return -1;
     }
     camera cam = camera(eye, viewdir, updir, fov, width, height, environment);
-    cam.castAllRays();
     //If either given vector is a null vector or they are colinear, stop the program
     if(cam.isInvalid()){
         cout << "View and up directions are invalid" << endl;
@@ -217,7 +267,7 @@ int main(int argc, char *argv[])
     {
         //Prepares the header for the ppm file
         outfile << "P3 " << width << " " << height << " " << 255 << endl;
-        
+        cam.castAllRays();
         //this is where the printing out the image
         //This has to be build from bottom to top because the rays start at the bottom left corner
         color* image = cam.getColors();

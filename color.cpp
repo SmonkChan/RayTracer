@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 #include "color.h"
@@ -12,8 +13,24 @@ color::color(){
 //Constructor takes 3 doubles that must be between 0 and 1 inclusive
 //If not it will throw an exception
 color::color(double r, double g, double b){
-    if((r>1)||(r<0)||(g>1)||(g<0)||(b>1)||(b<0)){
-        throw invalid_argument("recieved color value greater than 1 or less than 0");
+    if(r > 1){
+        std::cout << "red value = " << r << std::endl;
+        throw invalid_argument("recieved red color value greater than 1");
+    } else if(r < 0){
+        std::cout << "red value = " << r << std::endl;
+        throw invalid_argument("recieved red color value less than 0");
+    } else if(b > 1){
+        std::cout << "blue value = " << b << std::endl;
+        throw invalid_argument("recieved blue color value greater than 1");
+    } else if(b < 0){
+        std::cout << "blue value = " << b << std::endl;
+        throw invalid_argument("recieved blue color value less than 0");
+    } else if(g > 1){
+        std::cout << "green value = " << g << std::endl;
+        throw invalid_argument("recieved green color value greater than 1");
+    } else if(g < 0){
+        std::cout << "green value = " << g << std::endl;
+        throw invalid_argument("recieved green color value less than 0");
     }
     red = r;
     green = g;
