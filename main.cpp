@@ -158,6 +158,35 @@ int main(int argc, char *argv[])
                     break;
                 }
             }
+            else if(strIn == "v"){
+                double x;
+                double y;
+                double z;
+                infile >> x >> y >> z;
+                environment->addVertex(new point3D(x, y, z));
+            }
+            else if(strIn == "f"){
+                string instring;
+                string nums[9];
+                getline(infile, instring);
+                int j = 0;
+                for(int i = 0; i < 0; i++){
+                    nums[i] = "";
+                    while((instring.at(j) != '/') && (instring.at(j) != ' ') && (instring.at(j) != EOF)){
+                        nums[i]+instring.at(j);
+                        j++;
+                    }
+                    j++;
+                }
+                environment->addFace(stoi(nums[0]), stoi(nums[1]), stoi(nums[2]));
+            }
+            else if(strIn == "vn"){
+                double x;
+                double y;
+                double z;
+                infile >> x >> y >> z;
+                environment->addNormal(new vector3D(x, y, z));
+            }
         }
         infile.close();
         

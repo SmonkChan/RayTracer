@@ -3,7 +3,7 @@ viewdir 1.8 -0.3 -1
 updir 0 1 0
 fov 60
 imsize 500 500
-bkgcolor 0 0 0
+bkgcolor 1 1 1
 mtlcolor 1 0 0 1 1 1 0.1 0.4 0.4 50
 cylinder 6 0 -5 0 1 0 2 4
 sphere 6 2 -5 2
