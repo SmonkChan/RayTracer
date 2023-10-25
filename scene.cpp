@@ -133,20 +133,20 @@ void scene::addFlatFace(int* indecies, material* mat){
 
 void scene::addSmoothFace(int* indecies, material* mat){
     point3D* p1 = allVertexes[indecies[0]-1];
-    point3D* p2 = allVertexes[indecies[1]-1];
-    point3D* p3 = allVertexes[indecies[2]-1];
-    vector3D* n1 = allNorms[indecies[3]-1];
-    vector3D* n2 = allNorms[indecies[4]-1];
-    vector3D* n3 = allNorms[indecies[5]-1];
+    point3D* p2 = allVertexes[indecies[3]-1];
+    point3D* p3 = allVertexes[indecies[6]-1];
+    vector3D* n1 = allNorms[indecies[2]-1];
+    vector3D* n2 = allNorms[indecies[5]-1];
+    vector3D* n3 = allNorms[indecies[8]-1];
     addShape(new smoothTriangle(p1, n1, p2, n2, p3, n3, mat));
 }
 
 void scene::addTexturedFlatFace(int* indecies, material* mat){
     point3D* p1 = allVertexes[indecies[0]-1];
-    point3D* p2 = allVertexes[indecies[1]-1];
-    point3D* p3 = allVertexes[indecies[2]-1];
-    point3D* tp1 = allVertexes[indecies[3]-1];
-    point3D* tp2 = allVertexes[indecies[4]-1];
+    point3D* p2 = allVertexes[indecies[2]-1];
+    point3D* p3 = allVertexes[indecies[4]-1];
+    point3D* tp1 = allVertexes[indecies[1]-1];
+    point3D* tp2 = allVertexes[indecies[3]-1];
     point3D* tp3 = allVertexes[indecies[5]-1];
     addShape(new flatTriangle(p1, p2, p3, mat));
 }

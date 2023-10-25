@@ -213,14 +213,14 @@ int main(int argc, char *argv[])
                 }
                 j++;
                 /**
-                 *cout << "parsing result " << endl;
-                 *for(int i = 0; i < 9; i++){
-                 *    cout << "nums[" << i << "] = " << nums[i] << endl;
-                 *}
+                 cout << "parsing result " << endl;
+                 for(int i = 0; i < 9; i++){
+                    cout << "nums[" << i << "] = " << nums[i] << endl;
+                 }
                  */
                 if(j == 3){
                     environment->addFlatFace(nums, currMaterial);
-                } else if((j == 6) && (faceType == 1)){
+                } else if(faceType == 1){
                     environment->addSmoothFace(nums, currMaterial);
                 } else if((j == 6) && (faceType == 0)){
                     environment->addTexturedFlatFace(nums, currMaterial);
@@ -236,7 +236,9 @@ int main(int argc, char *argv[])
                 double y;
                 double z;
                 infile >> x >> y >> z;
-                environment->addNormal(new vector3D(x, y, z));
+                vector3D* normal = new vector3D(x, y, z);
+                normal->normalize();
+                environment->addNormal(normal);
             }
         }
         infile.close();
