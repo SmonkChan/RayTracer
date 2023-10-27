@@ -120,6 +120,7 @@ void scene::addNormal(vector3D* newNorm){
         allNorms = tempList;
     }
     allNorms[numNorms] = newNorm;
+    allNorms[numNorms]->normalize();
     numNorms++;
 }
 
@@ -148,7 +149,6 @@ void scene::addTexturedFlatFace(int* indecies, material* mat){
     point3D* tp1 = allVertexes[indecies[1]-1];
     point3D* tp2 = allVertexes[indecies[3]-1];
     point3D* tp3 = allVertexes[indecies[5]-1];
-    addShape(new flatTriangle(p1, p2, p3, mat));
 }
 
 void scene::addTexturedSmoothFace(int* indecies, material* mat){
