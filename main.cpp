@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     int width;
     int height;
 
+    Phong_material* latestPhong;
     material* currMaterial;
     //A bunch of temp variables to help parse the file
     string strIn;
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
                 infile >> x >> y >> z;
                 updir = vector3D(x, y, z);
             }
-            else if(strIn == "fov"){
+            else if(strIn == "fov" || strIn == "vfov"){
                 infile >> fov;
             }
             else if(strIn == "imsize"){
@@ -96,12 +97,13 @@ int main(int argc, char *argv[])
                     numDoubles++;
                 }
                 if(numDoubles == 3){
-                    currMaterial = new material(color(tempDoubles[0], tempDoubles[1], tempDoubles[2]));
+                    currMaterial = new flat_material(color(tempDoubles[0], tempDoubles[1], tempDoubles[2]));
                 }
                 else if(numDoubles == 10){
                     color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
                     color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
-                    currMaterial = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
+                    latestPhong = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
+                    currMaterial = latestPhong;
                 }
                 else{
                     cout << "invalid material";
@@ -231,7 +233,7 @@ int main(int argc, char *argv[])
                     cout << "face failed to read" << endl;
                 }
             }
-            else if(strIn == "vn"){
+            else if(strIn == "vn") {
                 double x;
                 double y;
                 double z;
@@ -239,6 +241,27 @@ int main(int argc, char *argv[])
                 vector3D* normal = new vector3D(x, y, z);
                 normal->normalize();
                 environment->addNormal(normal);
+            }
+            else if(strIn == "texture") {
+                string filename;
+                infile >> filename;
+                ifstream textureFile;
+                textureFile.open(filename);
+                string junk;
+                int texturewidth;
+                int textureheight;
+                textureFile >> junk >> texturewidth >> textureheight >> junk;
+                texture_material* newTexture = new texture_material(texturewidth, textureheight, latestPhong);
+                double r;
+                double g;
+                double b;
+                for(int i = 0; i < texturewidth*textureheight; i++){
+                    textureFile >> r >> g >> b;
+                    newTexture->textureData[i] = color(r,g,b);
+                }
+                currMaterial = newTexture;
+                environment->addMaterial(currMaterial);
+                textureFile.close();
             }
         }
         infile.close();

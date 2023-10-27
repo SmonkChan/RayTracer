@@ -141,3 +141,14 @@ vector3D cylinder::findNormal(point3D intersection, point3D rayOrigin){
     if(((intersection+flattenedVector)-rayOrigin).magnitude() < ((intersection+(flattenedVector.multiplyByScalar(-1.0)))-rayOrigin).magnitude()){return flattenedVector;} 
     else {return flattenedVector.multiplyByScalar(-1.0);}
 }
+
+void sphere::getTextureCords(point3D intersection, double& width, double& height) {
+    double phi = acos((intersection.getZ()-center.getZ())/radius);
+    double theta = atan2(intersection.getY()-center.getY(), intersection.getX()-center.getX());
+    height = phi/M_PI;
+    width = theta/(2*M_PI)+0.5;
+}
+
+void cylinder::getTextureCords(point3D intersection, double& width, double& height) {
+    std::cout << "Impliment texture cords for cylinder" << std::endl;
+}

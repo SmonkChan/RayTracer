@@ -31,8 +31,7 @@ color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene
     if(intersectionDistance < INFINITY){
         material* shapeMaterial = shapeIntersection->getColor();
         point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
-        vector3D normal = shapeIntersection->findNormal(intersectionPoint, origin);
-        return shapeMaterial->calculateColor(origin, intersectionPoint, normal, environment); 
+        return shapeMaterial->calculateColor(origin, intersectionPoint, shapeIntersection, environment); 
     } 
     else{
         return environment->bkgcolor;   

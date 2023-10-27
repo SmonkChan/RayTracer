@@ -11,26 +11,49 @@
 
 class material
 {
+    public:
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment) = 0;
+};
+
+class flat_material : public material 
+{
     private:
-    protected:
     color baseColor;
     public:
-    material(color base = color());
-    virtual color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene* environment);
+    flat_material(color base){baseColor = base;}
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment){return baseColor;}
 };
 
 class Phong_material : public material 
 {
     private:
+    color baseColor;
+    protected:
+    color phong_illumination(color colorAtPoint, point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
+
+    public:
     color specularHighlight;
     double specularA;
     double specularD;
     double specularS;
     double specularExponent;
+    Phong_material();
+    Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
+    virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
+};
+
+class texture_material : public Phong_material
+{
+    private:
+    int imWidth;
+    int imHeight;
 
     public:
-    Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
-    color calculateColor(point3D rayOrigin, point3D intersection, vector3D normal, scene* environment);
+    color* textureData;
+    texture_material(int width, int height, Phong_material* material_properties);
+    ~texture_material();
+    color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
+
 };
 
 #endif
