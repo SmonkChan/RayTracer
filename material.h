@@ -15,6 +15,7 @@ class material
     public:
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment) = 0;
     virtual void printInfo() = 0;
+    virtual ~material(){}
 };
 
 class flat_material : public material 
@@ -25,6 +26,7 @@ class flat_material : public material
     flat_material(color base){baseColor = base;}
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment){return baseColor;}
     void printInfo();
+    virtual ~flat_material(){}
 };
 
 class Phong_material : public material 
@@ -44,6 +46,7 @@ class Phong_material : public material
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
     virtual void printInfo();
+    virtual ~Phong_material(){}
 };
 
 class texture_material : public Phong_material

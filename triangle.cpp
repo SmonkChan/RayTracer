@@ -9,12 +9,6 @@ flatTriangle::flatTriangle(point3D* vertex1, point3D* vertex2, point3D* vertex3,
     e1 = (*p2-*p1);
     e2 = (*p3-*p1);
     planarNormal = e1.crossProduct(e2);
-    std::cout << "Point 0: " << p1->printPoint() << std::endl;
-    std::cout << "Point 1: " << p2->printPoint() << std::endl;
-    std::cout << "Point 2: " << p3->printPoint() << std::endl;
-    std::cout << "Triangle vector 1: " << e1.printVector() << std::endl;
-    std::cout << "Triangle vector 2: " << e2.printVector() << std::endl;
-    std::cout << "Plane normal: " << planarNormal.printVector() << std::endl;
     texture = mat;
 }
 
@@ -69,10 +63,41 @@ vector3D smoothTriangle::findNormal(point3D p, point3D originPoint){
     return (n1->multiplyByScalar(1-beta-gamma) + n2->multiplyByScalar(beta) + n3->multiplyByScalar(gamma)).getNormalVector();
 }
 
-void flatTriangleTextured::getTextureCords(point3D intersection, double& width, double& height) {
+flatTriangleTextured::flatTriangleTextured(point3D* vertex1, uvCord* texturePoint1, point3D* vertex2, uvCord* texturePoint2, point3D* vertex3, uvCord* texturePoint3, material* mat){
+    p1 = vertex1;
+    p2 = vertex2;
+    p3 = vertex3;
+    tp1 = texturePoint1;
+    tp2 = texturePoint2;
+    tp3 = texturePoint3;
+    e1 = (*p2-*p1);
+    e2 = (*p3-*p1);
+    planarNormal = e1.crossProduct(e2);
+    texture = mat;
+}
 
+smoothTriangleTextured::smoothTriangleTextured(point3D* vertex1, uvCord* texturePoint1, vector3D* normal1, point3D* vertex2, uvCord* texturePoint2, vector3D* normal2, point3D* vertex3, uvCord* texturePoint3, vector3D* normal3, material* mat){
+    p1 = vertex1;
+    p2 = vertex2;
+    p3 = vertex3;
+    n1 = normal1;
+    n2 = normal2;
+    n3 = normal3;
+    tp1 = texturePoint1;
+    tp2 = texturePoint2;
+    tp3 = texturePoint3;
+    e1 = (*p2-*p1);
+    e2 = (*p3-*p1);
+    planarNormal = e1.crossProduct(e2);
+    texture = mat;
+}
+
+void flatTriangleTextured::getTextureCords(point3D intersection, double& width, double& height) {
+    width = tp1->u*(1-beta-gamma) + tp2->u*beta + tp3->u*gamma;
+    height = tp1->v*(1-beta-gamma) + tp2->v*beta + tp3->v*gamma;
 }
 
 void smoothTriangleTextured::getTextureCords(point3D intersection, double& width, double& height) {
-
+    width = tp1->u*(1-beta-gamma) + tp2->u*beta + tp3->u*gamma;
+    height = tp1->v*(1-beta-gamma) + tp2->v*beta + tp3->v*gamma;
 }

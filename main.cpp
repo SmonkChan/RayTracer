@@ -14,6 +14,7 @@
 #include "lightsource.h"
 #include "scene.h"
 #include "camera.h"
+#include "triangle.h"
 
 using namespace std;
 
@@ -242,6 +243,15 @@ int main(int argc, char *argv[])
                 normal->normalize();
                 environment->addNormal(normal);
             }
+            else if(strIn == "vt") {
+                double u;
+                double v;
+                infile >> u >> v;
+                uvCord* newCord = new uvCord();
+                newCord->u = u;
+                newCord->v = v;
+                environment->addTextureCord(newCord);
+            }
             else if(strIn == "texture") {
                 string filename;
                 infile >> filename;
@@ -249,16 +259,13 @@ int main(int argc, char *argv[])
                 directory.append(filename);
                 ifstream textureFile;
                 textureFile.open(directory);
-                if (textureFile.is_open() ) { 
-                    cout << filename << " oppened" << endl; 
-                } else {
+                if (!textureFile.is_open() ) { 
                     cout << filename << " unable to be opened" << endl;
                 }
                 string junk;
                 int texturewidth;
                 int textureheight;
                 textureFile >> junk >> texturewidth >> textureheight >> junk;
-                cout << "Texture width: " << texturewidth << " Texture height " << textureheight << endl;
                 texture_material* newTexture = new texture_material(texturewidth, textureheight, latestPhong);
                 //latestPhong->printInfo();
                 //newTexture->printInfo();
@@ -319,5 +326,6 @@ int main(int argc, char *argv[])
         cout << "Unable to open file" << '\n';
         return -1;
     }
+    delete environment;
     return 0;
 }

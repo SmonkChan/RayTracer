@@ -27,11 +27,15 @@ scene::scene(){
     numNorms = 0;
     allNorms = new vector3D*[normalListSize];
 
+    textureCordListSize = 4;
+    numCords = 0;
+    allTextureCords = new uvCord*[textureCordListSize];
+
     bkgcolor = color(0,0,0);
 }
 
 scene::~scene(){
-    for(int i = 0; i > numShapes; i++){
+    for(int i = 0; i < numShapes; i++){
         delete allShapesList[i];
     } 
     delete[] allShapesList;
@@ -51,6 +55,10 @@ scene::~scene(){
         delete allNorms[i];
     }
     delete[] allNorms;
+    for(int i = 0; i < numCords; i ++){
+        delete allTextureCords[i];
+    }
+    delete[] allTextureCords;
 }
 
 void scene::addShape(shape* newShape){
@@ -96,7 +104,7 @@ void scene::addMaterial(material* newMaterial){
 }
 
 void scene::addVertex(point3D* newVertex){
-    if(numVerts == matListSize){
+    if(numVerts == vertexListSize){
         vertexListSize *= 2;
         point3D** tempList = new point3D*[vertexListSize];
         for(int i = 0; i < numVerts; i++){
@@ -124,12 +132,27 @@ void scene::addNormal(vector3D* newNorm){
     numNorms++;
 }
 
+void scene::addTextureCord(uvCord* newCord){
+    if(numCords == textureCordListSize){
+        textureCordListSize *= 2;
+        uvCord** tempList = new uvCord*[textureCordListSize];
+        for(int i = 0; i < numCords; i++){
+            tempList[i] = allTextureCords[i];
+        }
+        delete[] allTextureCords;
+        allTextureCords = tempList;
+    }
+    allTextureCords[numCords] = newCord;
+    numCords++;
+}
+
 void scene::addFlatFace(int* indecies, material* mat){
     point3D* p1 = allVertexes[indecies[0]-1];
     point3D* p2 = allVertexes[indecies[1]-1];
     point3D* p3 = allVertexes[indecies[2]-1];
     std::cout << "adding face. p1 = " << p1 << " p2 = " << p2 << " p3 = " << p3 << std::endl;
-    addShape(new flatTriangle(p1, p2, p3, mat));
+    shape* newTriangle = new flatTriangle(p1, p2, p3, mat);
+    addShape(newTriangle);
 }
 
 void scene::addSmoothFace(int* indecies, material* mat){
@@ -139,27 +162,31 @@ void scene::addSmoothFace(int* indecies, material* mat){
     vector3D* n1 = allNorms[indecies[2]-1];
     vector3D* n2 = allNorms[indecies[5]-1];
     vector3D* n3 = allNorms[indecies[8]-1];
-    addShape(new smoothTriangle(p1, n1, p2, n2, p3, n3, mat));
+    shape* newTriangle = new smoothTriangle(p1, n1, p2, n2, p3, n3, mat);
+    addShape(newTriangle);
 }
 
 void scene::addTexturedFlatFace(int* indecies, material* mat){
     point3D* p1 = allVertexes[indecies[0]-1];
     point3D* p2 = allVertexes[indecies[2]-1];
     point3D* p3 = allVertexes[indecies[4]-1];
-    point3D* tp1 = allVertexes[indecies[1]-1];
-    point3D* tp2 = allVertexes[indecies[3]-1];
-    point3D* tp3 = allVertexes[indecies[5]-1];
+    uvCord* tp1 = allTextureCords[indecies[1]-1];
+    uvCord* tp2 = allTextureCords[indecies[3]-1];
+    uvCord* tp3 = allTextureCords[indecies[5]-1];
+    shape* newTriangle = new flatTriangleTextured(p1, tp1, p2, tp2, p3, tp3, mat);
+    addShape(newTriangle);
 }
 
 void scene::addTexturedSmoothFace(int* indecies, material* mat){
     point3D* p1 = allVertexes[indecies[0]-1];
-    point3D* p2 = allVertexes[indecies[1]-1];
-    point3D* p3 = allVertexes[indecies[2]-1];
-    vector3D* n1 = allNorms[indecies[3]-1];
+    point3D* p2 = allVertexes[indecies[3]-1];
+    point3D* p3 = allVertexes[indecies[6]-1];
+    vector3D* n1 = allNorms[indecies[1]-1];
     vector3D* n2 = allNorms[indecies[4]-1];
-    vector3D* n3 = allNorms[indecies[5]-1];
-    point3D* tp1 = allVertexes[indecies[6]-1];
-    point3D* tp2 = allVertexes[indecies[7]-1];
-    point3D* tp3 = allVertexes[indecies[8]-1];
-    addShape(new smoothTriangle(p1, n1, p2, n2, p3, n3, mat));
+    vector3D* n3 = allNorms[indecies[7]-1];
+    uvCord* tp1 = allTextureCords[indecies[2]-1];
+    uvCord* tp2 = allTextureCords[indecies[5]-1];
+    uvCord* tp3 = allTextureCords[indecies[8]-1];
+    shape* newTriangle = new smoothTriangleTextured(p1, tp1, n1, p2, tp2, n2, p3, tp3, n3, mat);
+    addShape(newTriangle);
 }

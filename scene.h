@@ -7,6 +7,7 @@
 class shape;
 class material;
 class lightsource;
+struct uvCord;
 
 class scene {
     private:
@@ -15,6 +16,7 @@ class scene {
     int lightListSize;
     int vertexListSize;
     int normalListSize;
+    int textureCordListSize;
 
     public:
     color bkgcolor;
@@ -28,6 +30,8 @@ class scene {
     int numVerts;
     vector3D** allNorms;
     int numNorms;
+    uvCord** allTextureCords;
+    int numCords;
 
     scene();
     ~scene();
@@ -35,9 +39,10 @@ class scene {
     void addLight(lightsource* newLight);
     void addMaterial(material* newMaterial);
     void addVertex(point3D* newVertex);
+    void addNormal(vector3D* newNormal);
+    void addTextureCord(uvCord* newCord);
     void addFlatFace(int* indecies, material* mat);
     void addTexturedFlatFace(int* indecies, material* mat);
-    void addNormal(vector3D* newNormal);
     void addSmoothFace(int* indecies, material* mat);
     void addTexturedSmoothFace(int* indecies, material* mat);
     void setBackgroundColor(color b){bkgcolor = b;}

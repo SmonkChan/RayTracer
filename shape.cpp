@@ -6,10 +6,6 @@ using namespace std;
 
 shape::shape(){}
 
-shape::shape(const shape& shape2){
-    *this = shape2;
-}
-
 material* shape::getColor(){return texture;}
 
 //Constructors for a sphere
