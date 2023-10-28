@@ -47,7 +47,7 @@ color Phong_material::phong_illumination(color colorAtPoint, point3D rayOrigin, 
         double kdNL = specularD*normal.dotProduct(lightDir);
         vector3D H = (lightDir + ((rayOrigin-intersection).getNormalVector())).multiplyByScalar(0.5);
         double magnitude = H.magnitude();
-        if(magnitude != 0){H = H.multiplyByScalar(1/magnitude);}
+        if(fabs(magnitude) > 0.00000000001){H = H.multiplyByScalar(1/magnitude);}
         double ksNH = specularS*pow(normal.dotProduct(H), specularExponent);
         redComp += max(0,lightShadow.getRed())*(max(0,(colorAtPoint.getRed()*kdNL)) + max(0, specularHighlight.getRed()*ksNH));
         greenComp += max(0,lightShadow.getGreen())*(max(0,(colorAtPoint.getGreen()*kdNL)) + max(0, specularHighlight.getGreen()*ksNH));

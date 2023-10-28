@@ -36,5 +36,5 @@
 *.png
 
 # Other ignores
-./examples-1c
+./examples-1c*
 *_app
