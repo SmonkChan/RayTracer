@@ -27,7 +27,7 @@ class flatTriangle : public triangle
     public:
     flatTriangle(point3D* vertex1, point3D* vertex2, point3D* vertex3, material* mat);
     vector3D findNormal(point3D p, point3D originPoint){return planarNormal.getNormalVector();}
-    virtual void getTextureCords(point3D intersection, double& width, double& height);
+    virtual void getTextureCords(point3D intersection, double& width, double& height){}
 };
 
 class smoothTriangle : public triangle
@@ -39,7 +39,7 @@ class smoothTriangle : public triangle
     public:
     smoothTriangle(point3D* vertex1, vector3D* normal1, point3D* vertex2, vector3D* normal2, point3D* vertex3, vector3D* normal3, material* mat);
     vector3D findNormal(point3D p, point3D originPoint);
-    virtual void getTextureCords(point3D intersection, double& width, double& height);
+    virtual void getTextureCords(point3D intersection, double& width, double& height){}
 };
 
 class flatTriangleTextured : public flatTriangle
@@ -47,7 +47,7 @@ class flatTriangleTextured : public flatTriangle
     void getTextureCords(point3D intersection, double& width, double& height);
 };
 
-class smoothTrianlgeTextured: public smoothTriangle
+class smoothTriangleTextured: public smoothTriangle
 {
     void getTextureCords(point3D intersection, double& width, double& height);
 };

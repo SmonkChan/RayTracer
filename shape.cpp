@@ -143,8 +143,9 @@ vector3D cylinder::findNormal(point3D intersection, point3D rayOrigin){
 }
 
 void sphere::getTextureCords(point3D intersection, double& width, double& height) {
-    double phi = acos((intersection.getZ()-center.getZ())/radius);
-    double theta = atan2(intersection.getY()-center.getY(), intersection.getX()-center.getX());
+    vector3D N = (intersection - center).getNormalVector();
+    double phi = acos(N.getZ());
+    double theta = atan2(N.getY(), N.getX());
     height = phi/M_PI;
     width = theta/(2*M_PI)+0.5;
 }

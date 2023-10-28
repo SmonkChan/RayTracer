@@ -245,19 +245,29 @@ int main(int argc, char *argv[])
             else if(strIn == "texture") {
                 string filename;
                 infile >> filename;
+                string directory = "./texture/";
+                directory.append(filename);
                 ifstream textureFile;
-                textureFile.open(filename);
+                textureFile.open(directory);
+                if (textureFile.is_open() ) { 
+                    cout << filename << " oppened" << endl; 
+                } else {
+                    cout << filename << " unable to be opened" << endl;
+                }
                 string junk;
                 int texturewidth;
                 int textureheight;
                 textureFile >> junk >> texturewidth >> textureheight >> junk;
+                cout << "Texture width: " << texturewidth << " Texture height " << textureheight << endl;
                 texture_material* newTexture = new texture_material(texturewidth, textureheight, latestPhong);
+                //latestPhong->printInfo();
+                //newTexture->printInfo();
                 double r;
                 double g;
                 double b;
                 for(int i = 0; i < texturewidth*textureheight; i++){
                     textureFile >> r >> g >> b;
-                    newTexture->textureData[i] = color(r,g,b);
+                    newTexture->textureData[i] = color(r/255.0,g/255.0,b/255.0);
                 }
                 currMaterial = newTexture;
                 environment->addMaterial(currMaterial);

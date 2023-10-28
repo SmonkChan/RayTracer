@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <iostream>
 #include "color.h"
 #include "point.h"
 #include "lightsource.h"
@@ -13,6 +14,7 @@ class material
 {
     public:
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment) = 0;
+    virtual void printInfo() = 0;
 };
 
 class flat_material : public material 
@@ -22,6 +24,7 @@ class flat_material : public material
     public:
     flat_material(color base){baseColor = base;}
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment){return baseColor;}
+    void printInfo();
 };
 
 class Phong_material : public material 
@@ -40,6 +43,7 @@ class Phong_material : public material
     Phong_material();
     Phong_material(color baseColor, color highlight, double ka, double kd, double ks, double n);
     virtual color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
+    virtual void printInfo();
 };
 
 class texture_material : public Phong_material
@@ -53,7 +57,7 @@ class texture_material : public Phong_material
     texture_material(int width, int height, Phong_material* material_properties);
     ~texture_material();
     color calculateColor(point3D rayOrigin, point3D intersection, shape* intersectedShape, scene* environment);
-
+    void printInfo();
 };
 
 #endif

@@ -83,7 +83,40 @@ color texture_material::calculateColor(point3D rayOrigin, point3D intersection, 
     double width_cord = 0;
     double height_cord = 0;
     intersectedShape->getTextureCords(intersection, width_cord, height_cord);
-    color baseColor =  textureData[(int)(round(width_cord*imWidth) + round(height_cord*imHeight)*imWidth)];
-    color result_color = phong_illumination(baseColor, rayOrigin, intersection, intersectedShape, environment);
+    //std::cout << "width_cord: " << width_cord << std::endl;
+    //std::cout << "height_cord: " << height_cord << std::endl;
+    color colorAtPoint =  textureData[(int)(round(width_cord*imWidth) + round(height_cord*imHeight)*imWidth)];
+    //std::cout << "color at point: " << colorAtPoint.getString() << std::endl;
+    color result_color = phong_illumination(colorAtPoint, rayOrigin, intersection, intersectedShape, environment);
+    //std::cout << "result color: " << result_color.getString() << std::endl;
     return result_color;
+}
+
+void flat_material::printInfo() {
+    std::cout << "Flat Material Info:" << std::endl;
+    std::cout << "================================" << std::endl;
+    std::cout << "Base Color:         " << baseColor.getString() << std::endl << std::endl;
+}
+
+void Phong_material::printInfo() {
+    std::cout << "Phong Material Info:" << std::endl;
+    std::cout << "================================" << std::endl;
+    std::cout << "Base Color:         " << baseColor.getString() << std::endl;
+    std::cout << "Specular Highlight: " << specularHighlight.getString() << std::endl;
+    std::cout << "Specular Ambient:   " << specularA << std::endl;
+    std::cout << "Specular Difuse:    " << specularD << std::endl;
+    std::cout << "Specular Spotlight: " << specularS << std::endl;
+    std::cout << "Specular Exponent:  " << specularExponent << std::endl << std::endl;
+}
+
+void texture_material::printInfo() {
+    std::cout << "Texture Material Info:" << std::endl;
+    std::cout << "================================" << std::endl;
+    std::cout << "Image Width:        " << imWidth << std::endl;
+    std::cout << "Image Height:       " << imHeight << std::endl;
+    std::cout << "Specular Highlight: " << specularHighlight.getString() << std::endl;
+    std::cout << "Specular Ambient:   " << specularA << std::endl;
+    std::cout << "Specular Difuse:    " << specularD << std::endl;
+    std::cout << "Specular Spotlight: " << specularS << std::endl;
+    std::cout << "Specular Exponent:  " << specularExponent << std::endl << std::endl;
 }

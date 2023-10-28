@@ -68,3 +68,11 @@ double triangle::intersects(point3D origin, vector3D ray){
 vector3D smoothTriangle::findNormal(point3D p, point3D originPoint){
     return (n1->multiplyByScalar(1-beta-gamma) + n2->multiplyByScalar(beta) + n3->multiplyByScalar(gamma)).getNormalVector();
 }
+
+void flatTriangleTextured::getTextureCords(point3D intersection, double& width, double& height) {
+
+}
+
+void smoothTriangleTextured::getTextureCords(point3D intersection, double& width, double& height) {
+
+}
