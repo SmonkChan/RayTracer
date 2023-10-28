@@ -1,7 +1,7 @@
 #include "lightsource.h"
 
 directional_light::directional_light(vector3D v, color c){
-    lightDirection = v;
+    lightDirection = v.multiplyByScalar(-1);
     lightColor = c;
 }
 
