@@ -45,33 +45,24 @@ double sphere::intersects(point3D origin, vector3D ray){
     double zd = ray.getZ();
     double r = radius;
 
-    //This is all for calculating the distance, I just split it up onto multiple lines
-    /*
-    double difference = pow(r,2)-pow(xc,2)-pow(xo,2)-pow(yc,2)-pow(yo,2)-pow(zc,2)-pow(zo,2)+2*xo*xc+2*yo*yc+2*zo*zc;
-    //Sum of the vector components squared
-    double sumSquares = pow(xd,2)+pow(yd,2)+pow(zd,2);
-    double otherComp = xd*xo+yd*yo+zd*zo-xd*xc-yd*yc-zd*zc;
-    double insideRoot = difference/sumSquares+pow(otherComp/sumSquares,2);
-    //This checks if the root is imaginary
-    //If it is, there is no intersection and so return -1 to indicate that
-    if(insideRoot<0){return -1;}
-    if(sqrt(insideRoot)-otherComp/sumSquares < -sqrt(insideRoot)-otherComp/sumSquares){
-        return sqrt(insideRoot)-otherComp/sumSquares;
-    }
-    else{return -sqrt(insideRoot)-otherComp/sumSquares;}
-    */
-    
     //This is a much simplified version of the equation, and much more likely to be correct
     double B = 2*(xd*(xo-xc)+yd*(yo-yc)+zd*(zo-zc));
     double C = pow(xo-xc,2)+pow(yo-yc,2)+pow(zo-zc,2)-pow(r,2);
     double discriminant = pow(B,2)-4*C;
     if(discriminant < 0) {return -1;}
-    if ((-B-sqrt(discriminant))/2 < (-B+sqrt(discriminant))/2){
+    if ((-B-sqrt(discriminant))/2 < (-B+sqrt(discriminant))/2 && (-B-sqrt(discriminant))/2 > 0){
         return (-B-sqrt(discriminant))/2;
-    } else {return (-B+sqrt(discriminant))/2;}
+    } else {
+        return (-B+sqrt(discriminant))/2;
+    }
 }
 vector3D sphere::findNormal(point3D intersection, point3D rayOrigin){
-    return (intersection-center).getNormalVector();
+    vector3D normal = (intersection-center).getNormalVector();
+    if(rayOrigin.distance(center) < radius){
+        return normal.multiplyByScalar(-1);
+    } else {
+        return normal;
+    }
 }
 
 //Constructors for a cylinder
