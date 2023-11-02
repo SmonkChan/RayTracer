@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                 environment->setBackgroundColor(color(r, g, b));
             }
             else if(strIn == "mtlcolor"){
-                double tempDoubles[10];
+                double tempDoubles[12];
                 string materialLine;
                 std::getline(infile, materialLine);
                 std::stringstream s(materialLine);
@@ -104,6 +104,12 @@ int main(int argc, char *argv[])
                     color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
                     color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
                     latestPhong = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9]);
+                    currMaterial = latestPhong;
+                }
+                else if(numDoubles == 12){
+                    color baseColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
+                    color spotColor = color(tempDoubles[3], tempDoubles[4], tempDoubles[5]);
+                    latestPhong = new Phong_material(baseColor, spotColor, tempDoubles[6], tempDoubles[7], tempDoubles[8], tempDoubles[9], tempDoubles[10], tempDoubles[11]);
                     currMaterial = latestPhong;
                 }
                 else{

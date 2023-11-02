@@ -37,3 +37,29 @@ color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene
         return environment->bkgcolor;   
     }
 }
+
+color raycaster::calculateRayEffect(double fresnel, point3D origin, vector3D rayDirection, scene* environment){
+    double intersectionDistance = INFINITY;
+    shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
+    if(intersectionDistance < INFINITY){
+        material* shapeMaterial = shapeIntersection->getColor();
+        point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
+        color materialColor = shapeMaterial->calculateColor(origin, intersectionPoint, shapeIntersection, environment); 
+        materialColor = materialColor * fresnel;
+        if(materialColor.getRed() < 0.001 && materialColor.getGreen() < 0.001 && materialColor.getBlue() < 0.001){
+            return color(0,0,0);
+        }
+        else {
+            vector3D N = shapeIntersection->findNormal(intersectionPoint, origin);
+            vector3D I = rayDirection.multiplyByScalar(-1);
+            vector3D R = N.multiplyByScalar(2 * (N.dotProduct(I))) + rayDirection;
+            double cosTheta = I.dotProduct(N);
+            double F0 = shapeMaterial->getFresnel();
+            double Fr = F0 + (1 - F0)*pow((1-cosTheta), 5);
+            return materialColor + calculateRayEffect(Fr, intersectionPoint, R, environment);
+        }
+    } 
+    else{
+        return environment->bkgcolor;   
+    }
+}

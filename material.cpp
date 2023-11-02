@@ -7,6 +7,19 @@ Phong_material::Phong_material(color bColor, color highlight, double ka, double 
     specularD = kd;
     specularS = ks;
     specularExponent = n;
+    opacity = 1;
+    indexOfRefraction = 1;
+}
+
+Phong_material::Phong_material(color bColor, color highlight, double ka, double kd, double ks, double n, double alpha, double eta){
+    baseColor = bColor;
+    specularHighlight = highlight;
+    specularA = ka;
+    specularD = kd;
+    specularS = ks;
+    specularExponent = n;
+    opacity = alpha;
+    indexOfRefraction = eta;
 }
 
 Phong_material::Phong_material(){
@@ -73,6 +86,8 @@ texture_material::texture_material(int width, int height, Phong_material* materi
     this->specularD = material_properties->specularD;
     this->specularS = material_properties->specularS;
     this->specularExponent = material_properties->specularExponent;
+    this->opacity = material_properties->opacity;
+    this->indexOfRefraction = material_properties->indexOfRefraction;
 }
 
 texture_material::~texture_material(){
@@ -98,6 +113,11 @@ void flat_material::printInfo() {
     std::cout << "Base Color:         " << baseColor.getString() << std::endl << std::endl;
 }
 
+double Phong_material::getIndexOfRefraction(){return indexOfRefraction;}
+double Phong_material::getFresnel(){
+    return pow((indexOfRefraction - 1) / (indexOfRefraction + 1), 2);
+}
+
 void Phong_material::printInfo() {
     std::cout << "Phong Material Info:" << std::endl;
     std::cout << "================================" << std::endl;
@@ -120,3 +140,4 @@ void texture_material::printInfo() {
     std::cout << "Specular Spotlight: " << specularS << std::endl;
     std::cout << "Specular Exponent:  " << specularExponent << std::endl << std::endl;
 }
+

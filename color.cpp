@@ -47,6 +47,20 @@ void color::operator=(const color& color2){
     this->green = color2.green;
 }
 
+color color::operator+(const color& color2){
+    double red = this->red + color2.red;
+    double green = this->blue + color2.blue;
+    double blue = this->green + color2.green;
+    return color(red, green, blue);
+}
+
+color color::operator*(const double& scalar){
+    double red = this->red * scalar;
+    double green = this->green * scalar;
+    double blue = this->blue * scalar;
+    return color(red, green, blue);
+}
+
 //Creates a string based on the Char data to easily print
 string color::getString(){
     int r = (int)(red*255);

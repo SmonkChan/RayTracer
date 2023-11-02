@@ -20,6 +20,8 @@ public:
     double getBlue(){return blue;}
 
     void operator=(const color& color2);
+    color operator+(const color& color2);
+    color operator*(const double& color2);
 
     //Outputs the char data as a string to make extreamly easy to print
     std::string getString();
