@@ -49,15 +49,21 @@ void color::operator=(const color& color2){
 
 color color::operator+(const color& color2){
     double red = this->red + color2.red;
-    double green = this->blue + color2.blue;
-    double blue = this->green + color2.green;
+    if(red > 1){red = 1;}
+    double green = this->green + color2.green;
+    if(green > 1){green = 1;}
+    double blue = this->blue + color2.blue;
+    if(blue > 1){blue = 1;}
     return color(red, green, blue);
 }
 
 color color::operator*(const double& scalar){
     double red = this->red * scalar;
+    if(red > 1){red = 1;}
     double green = this->green * scalar;
+    if(green > 1){green = 1;}
     double blue = this->blue * scalar;
+    if(blue > 1){blue = 1;}
     return color(red, green, blue);
 }
 

@@ -25,38 +25,32 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, sc
     return closestShape;
 }
 
-color raycaster::calculateRayEffect(point3D origin, vector3D rayDirection, scene* environment){
-    double intersectionDistance = INFINITY;
-    shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
-    if(intersectionDistance < INFINITY){
-        material* shapeMaterial = shapeIntersection->getColor();
-        point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
-        return shapeMaterial->calculateColor(origin, intersectionPoint, shapeIntersection, environment); 
-    } 
-    else{
-        return environment->bkgcolor;   
-    }
-}
-
-color raycaster::calculateRayEffect(double fresnel, point3D origin, vector3D rayDirection, scene* environment){
+color raycaster::calculateRayEffect(int recursions, point3D origin, vector3D rayDirection, scene* environment){
+    const int maxRecursions = 10;
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
     if(intersectionDistance < INFINITY){
         material* shapeMaterial = shapeIntersection->getColor();
         point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
         color materialColor = shapeMaterial->calculateColor(origin, intersectionPoint, shapeIntersection, environment); 
-        materialColor = materialColor * fresnel;
-        if(materialColor.getRed() < 0.001 && materialColor.getGreen() < 0.001 && materialColor.getBlue() < 0.001){
-            return color(0,0,0);
+        if(recursions >= maxRecursions || shapeMaterial->getSpecular() == 0){
+            return materialColor;
         }
         else {
-            vector3D N = shapeIntersection->findNormal(intersectionPoint, origin);
-            vector3D I = rayDirection.multiplyByScalar(-1);
+            vector3D N = shapeIntersection->findNormal(intersectionPoint, origin).getNormalVector();
+            vector3D I = rayDirection.multiplyByScalar(-1).getNormalVector();
             vector3D R = N.multiplyByScalar(2 * (N.dotProduct(I))) + rayDirection;
             double cosTheta = I.dotProduct(N);
             double F0 = shapeMaterial->getFresnel();
             double Fr = F0 + (1 - F0)*pow((1-cosTheta), 5);
-            return materialColor + calculateRayEffect(Fr, intersectionPoint, R, environment);
+            if(Fr > 1) {
+                std::cout << "=======ERROR=======" << std::endl;
+                std::cout << "Fr = " << Fr << " F0 = " << F0 << std::endl;
+                std::cout << "Normal Vector: " << N.printVector() << std::endl;
+                std::cout << "I Vector: " << I.printVector() << std::endl;
+                std::cout << "cosTheta between vectors " << cosTheta << std::endl << std::endl;
+            }
+            return materialColor + (calculateRayEffect(recursions+1, intersectionPoint, R, environment) * Fr);
         }
     } 
     else{

@@ -18,6 +18,7 @@ class material
     virtual ~material(){}
     virtual double getIndexOfRefraction() = 0;
     virtual double getFresnel() = 0;
+    virtual double getSpecular() = 0;
 };
 
 class flat_material : public material 
@@ -31,6 +32,7 @@ class flat_material : public material
     virtual ~flat_material(){}
     double getIndexOfRefraction(){return 1;}
     double getFresnel(){return 0;}
+    double getSpecular(){return 0;}
 };
 
 class Phong_material : public material 
@@ -56,6 +58,7 @@ class Phong_material : public material
     virtual ~Phong_material(){}
     virtual double getIndexOfRefraction();
     virtual double getFresnel();
+    double getSpecular(){return specularS;}
 };
 
 class texture_material : public Phong_material
