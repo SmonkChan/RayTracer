@@ -32,6 +32,7 @@ class scene {
     int numNorms;
     uvCord** allTextureCords;
     int numCords;
+    double indexOfRefraction;
 
     scene();
     ~scene();
@@ -46,5 +47,6 @@ class scene {
     void addSmoothFace(int* indecies, material* mat);
     void addTexturedSmoothFace(int* indecies, material* mat);
     void setBackgroundColor(color b){bkgcolor = b;}
+    void setIndexOfRefraction(double i){indexOfRefraction = i;}
 };
 #endif

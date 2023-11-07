@@ -27,7 +27,7 @@ class flatTriangle : public triangle
     public:
     flatTriangle(){}
     flatTriangle(point3D* vertex1, point3D* vertex2, point3D* vertex3, material* mat);
-    vector3D findNormal(point3D p, point3D originPoint){return planarNormal.getNormalVector();}
+    vector3D findNormal(point3D p, point3D originPoint);
     virtual void getTextureCords(point3D intersection, double& width, double& height){}
 };
 

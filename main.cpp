@@ -80,11 +80,24 @@ int main(int argc, char *argv[])
                 infile >> width >> height;
             }
             else if(strIn == "bkgcolor"){
-                double r;
-                double g;
-                double b;
-                infile >> r >> g >> b;
-                environment->setBackgroundColor(color(r, g, b));
+                double tempDoubles[4];
+                string bkgLine;
+                std::getline(infile, bkgLine);
+                std::stringstream s(bkgLine);
+                double readIn;
+                int numDoubles = 0;
+                while (s >> readIn){
+                    tempDoubles[numDoubles] = readIn;
+                    numDoubles++;
+                }
+                color bkgColor = color(tempDoubles[0], tempDoubles[1], tempDoubles[2]);
+                environment->setBackgroundColor(bkgColor);
+                if(numDoubles == 3){
+                    environment->setIndexOfRefraction(1);
+                }
+                else{
+                    environment->setIndexOfRefraction(tempDoubles[3]);
+                }
             }
             else if(strIn == "mtlcolor"){
                 double tempDoubles[12];

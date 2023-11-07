@@ -59,8 +59,26 @@ double triangle::intersects(point3D origin, vector3D ray){
     }
 }
 
+vector3D flatTriangle::findNormal(point3D p, point3D originPoint){
+    vector3D normal = planarNormal.getNormalVector();
+    vector3D inverseNormal = normal.multiplyByScalar(-1);
+    if(originPoint.distance(p + normal) < originPoint.distance(p + inverseNormal)){
+        return normal;
+    }
+    else {
+        return inverseNormal;
+    }
+}
+
 vector3D smoothTriangle::findNormal(point3D p, point3D originPoint){
-    return (n1->multiplyByScalar(1-beta-gamma) + n2->multiplyByScalar(beta) + n3->multiplyByScalar(gamma)).getNormalVector();
+    vector3D normal = (n1->multiplyByScalar(1-beta-gamma) + n2->multiplyByScalar(beta) + n3->multiplyByScalar(gamma)).getNormalVector();
+    vector3D inverseNormal = normal.multiplyByScalar(-1);
+    if(originPoint.distance(p + normal) < originPoint.distance(p + inverseNormal)){
+        return normal;
+    }
+    else {
+        return inverseNormal;
+    }
 }
 
 flatTriangleTextured::flatTriangleTextured(point3D* vertex1, uvCord* texturePoint1, point3D* vertex2, uvCord* texturePoint2, point3D* vertex3, uvCord* texturePoint3, material* mat){
