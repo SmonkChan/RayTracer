@@ -39,6 +39,14 @@ vector3D vector3D::operator+(vector3D v2){
     return newVector;
 }
 
+vector3D vector3D::operator-(vector3D v2){
+    double x = v[0]-v2.getX();
+    double y = v[1]-v2.getY();
+    double z = v[2]-v2.getZ();
+    vector3D newVector(x,y,z);
+    return newVector;
+}
+
 //Computes the cross product of the vector cross another vector
 //Ex: vector1.crossProduct(vector2) = vector1 X vector2
 vector3D vector3D::crossProduct(vector3D v2){

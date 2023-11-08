@@ -42,7 +42,7 @@ void camera::castAllRays(){
         for(int i =0; i < imsizeWidth; i++){
             vector3D ray = bottomVector+(horiPixelChange.multiplyByScalar(i))+(vertPixelChange.multiplyByScalar(j));
             ray.normalize();
-            colorOut[(j*imsizeWidth)+i] = rays.calculateRayEffect(0, eye, ray, environment);
+            colorOut[(j*imsizeWidth)+i] = rays.calculateRayEffect(0, environment->indexOfRefraction, eye, ray, environment);
         }
     }
 }

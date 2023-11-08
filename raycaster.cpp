@@ -25,7 +25,7 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, sc
     return closestShape;
 }
 
-color raycaster::calculateRayEffect(int recursions, point3D origin, vector3D rayDirection, scene* environment){
+color raycaster::calculateRayEffect(int recursions, double currIoR, point3D origin, vector3D rayDirection, scene* environment){
     const int maxRecursions = 10;
     double intersectionDistance = INFINITY;
     shape* shapeIntersection = shootRay(origin, rayDirection, intersectionDistance, environment);
@@ -33,16 +33,18 @@ color raycaster::calculateRayEffect(int recursions, point3D origin, vector3D ray
         material* shapeMaterial = shapeIntersection->getColor();
         point3D intersectionPoint = origin + rayDirection.multiplyByScalar(intersectionDistance);
         color materialColor = shapeMaterial->calculateColor(origin, intersectionPoint, shapeIntersection, environment); 
+        color refractedColor;
+        color transmittedColor = color(0,0,0);
+
+        vector3D N = shapeIntersection->findNormal(intersectionPoint, origin).getNormalVector();
+        vector3D I = rayDirection.multiplyByScalar(-1).getNormalVector();
+        double cosTheta = I.dotProduct(N);
+        double F0 = shapeMaterial->getFresnel();
+        double Fr = F0 + (1 - F0)*pow((1-cosTheta), 5);
         if(recursions >= maxRecursions || shapeMaterial->getSpecular() == 0){
-            return materialColor;
+            refractedColor = color(0,0,0);
         }
         else {
-            vector3D N = shapeIntersection->findNormal(intersectionPoint, origin).getNormalVector();
-            vector3D I = rayDirection.multiplyByScalar(-1).getNormalVector();
-            vector3D R = N.multiplyByScalar(2 * (N.dotProduct(I))) + rayDirection;
-            double cosTheta = I.dotProduct(N);
-            double F0 = shapeMaterial->getFresnel();
-            double Fr = F0 + (1 - F0)*pow((1-cosTheta), 5);
             if(Fr > 1) {
                 std::cout << "=======ERROR=======" << std::endl;
                 std::cout << "Fr = " << Fr << " F0 = " << F0 << std::endl;
@@ -50,8 +52,28 @@ color raycaster::calculateRayEffect(int recursions, point3D origin, vector3D ray
                 std::cout << "I Vector: " << I.printVector() << std::endl;
                 std::cout << "cosTheta between vectors " << cosTheta << std::endl << std::endl;
             }
-            return materialColor + (calculateRayEffect(recursions+1, intersectionPoint, R, environment) * Fr);
+            vector3D R = N.multiplyByScalar(2 * (N.dotProduct(I))) + rayDirection;
+            refractedColor = calculateRayEffect(recursions+1, currIoR, intersectionPoint, R, environment) * Fr;
         }
+
+        if(shapeMaterial->getOpacity() < 1){
+            double transmittedIoF;
+            if(currIoR == shapeMaterial->getIndexOfRefraction()){
+                transmittedIoF = environment->indexOfRefraction;
+            }
+            else{
+                transmittedIoF = shapeMaterial->getIndexOfRefraction();
+            }
+
+            if(std::sqrt(1 - pow(cosTheta, 2)) <= transmittedIoF / currIoR){
+                double transCoef = (1-Fr)*(1-shapeMaterial->getOpacity());
+                vector3D transmittedRay;
+                double sqrtCoef = std::sqrt(1 - (pow(currIoR / transmittedIoF, 2) * (1 - pow(cosTheta, 2))));
+                transmittedRay = N.multiplyByScalar(-sqrtCoef) + (N.multiplyByScalar(cosTheta) - I).multiplyByScalar(currIoR / transmittedIoF);
+                transmittedColor = calculateRayEffect(recursions, transmittedIoF, intersectionPoint, transmittedRay, environment) * transCoef;
+            }
+        }
+        return materialColor + refractedColor + transmittedColor;
     } 
     else{
         return environment->bkgcolor;   

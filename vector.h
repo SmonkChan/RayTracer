@@ -22,6 +22,7 @@ class vector3D{
         //Other useful methods
         void operator=(const vector3D& vector2);
         vector3D operator+(vector3D v2);
+        vector3D operator-(vector3D v2);
         vector3D crossProduct(vector3D v2);
         double dotProduct(vector3D v2);
         double magnitude();

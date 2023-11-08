@@ -14,6 +14,6 @@ class raycaster{
     raycaster(){}
     //Methods that do the core functions of the raycaster
     shape* shootRay(point3D origin, vector3D ray, double& intersectionDistance, scene* environment);
-    color calculateRayEffect(int recursions, point3D origin, vector3D ray, scene* environment);
+    color calculateRayEffect(int recursions, double currIoF, point3D origin, vector3D ray, scene* environment);
 };
 #endif
