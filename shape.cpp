@@ -58,7 +58,9 @@ double sphere::intersects(point3D origin, vector3D ray){
 }
 vector3D sphere::findNormal(point3D intersection, point3D rayOrigin){
     vector3D normal = (intersection-center).getNormalVector();
-    if(rayOrigin.distance(center) < radius){
+    point3D furtherPoint = intersection + normal;
+    point3D nearerPoint = intersection + normal.multiplyByScalar(-1);
+    if(rayOrigin.distance(nearerPoint) < rayOrigin.distance(furtherPoint)){
         return normal.multiplyByScalar(-1);
     } else {
         return normal;

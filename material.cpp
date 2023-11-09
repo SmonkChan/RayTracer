@@ -47,16 +47,20 @@ color Phong_material::phong_illumination(color colorAtPoint, point3D rayOrigin, 
         //for each light source we check if there is a shadow
         //then we calculate the the influence it has on the color of the pixel
         vector3D lightDir = environment->allLights[i]->getLightDirection(intersection);
+        vector3D normal = intersectedShape->findNormal(intersection, rayOrigin);
+        
         double distance = environment->allLights[i]->distanceFromLight(intersection);
         rays.shootRay(intersection, lightDir, distance, environment);
         color lightShadow;
-        if(distance < environment->allLights[i]->distanceFromLight(intersection)){
+        if(lightDir.dotProduct(normal) < 0){
+            lightShadow = color(0,0,0);
+        }
+        else if(distance < environment->allLights[i]->distanceFromLight(intersection)){
             lightShadow = color(0,0,0);
         }
         else{
             lightShadow = environment->allLights[i]->getLightColor(distance);
         }
-        vector3D normal = intersectedShape->findNormal(intersection, rayOrigin);
         double kdNL = specularD*normal.dotProduct(lightDir);
         vector3D H = (lightDir + ((rayOrigin-intersection).getNormalVector())).multiplyByScalar(0.5);
         double magnitude = H.magnitude();

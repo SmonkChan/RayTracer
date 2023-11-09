@@ -1,14 +1,14 @@
 imsize 512 512
-eye 0 -8 0
-viewdir 0 1 0
+eye 0 8 0
+viewdir 0 -1 0
 updir 0 0 1
 vfov 90
 bkgcolor 0.5 0.7 0.9 1
 mtlcolor 0 1 0 1 1 1 1 0 0 20
 texture town360.ppm
 sphere 0 0 0 10
-light 5 5 7 1 1 1 1
-mtlcolor 1 1 1 1 1 1 0 0 1 20 0.1 1.5
+/light 5 5 7 1 1 1 1
+mtlcolor 1 1 1 1 1 1 0 0 1 20 0 1.2
 sphere 0 0 0 4
 mtlcolor 1 1 1 1 1 1 0.2 0.4 0.4 20
 texture grass.ppm
@@ -22,6 +22,6 @@ vt 1 0
 vt 1 1
 /f 1/1 2/2 3/3
 /f 1/1 4/4 3/3
-mtlcolor 1 1 1 1 1 1 0 0 1 20 1 1000000
+mtlcolor 1 1 1 1 1 1 0 0 1 20 1 0
 /f 1/1 2/2 3/3
 /f 1/1 4/4 3/3
