@@ -50,7 +50,7 @@ double sphere::intersects(point3D origin, vector3D ray){
     double C = pow(xo-xc,2)+pow(yo-yc,2)+pow(zo-zc,2)-pow(r,2);
     double discriminant = pow(B,2)-4*C;
     if(discriminant < 0) {return -1;}
-    if ((-B-sqrt(discriminant))/2 < (-B+sqrt(discriminant))/2 && (-B-sqrt(discriminant))/2 > 0){
+    if ((-B-sqrt(discriminant))/2 < (-B+sqrt(discriminant))/2 && (-B-sqrt(discriminant))/2 > 0.00001){
         return (-B-sqrt(discriminant))/2;
     } else {
         return (-B+sqrt(discriminant))/2;

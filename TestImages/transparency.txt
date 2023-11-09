@@ -7,8 +7,8 @@ bkgcolor 0.5 0.7 0.9 1
 mtlcolor 0 1 0 1 1 1 1 0 0 20
 texture town360.ppm
 sphere 0 0 0 10
-/light 5 5 7 1 1 1 1
-mtlcolor 1 1 1 1 1 1 0 0 1 20 0 1.2
+light 5 5 7 1 1 1 1
+mtlcolor 1 0 1 1 1 1 0 0 0.5 20 0.7 0.7
 sphere 0 0 0 4
 mtlcolor 1 1 1 1 1 1 0.2 0.4 0.4 20
 texture grass.ppm

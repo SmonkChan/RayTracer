@@ -60,6 +60,9 @@ color raycaster::calculateRayEffect(int recursions, double currIoR, point3D orig
         if(shapeMaterial->getOpacity() < 1){
             double sinTheta = std::sqrt(1 - pow(cosTheta, 2));
             double transmittedIoF = shapeMaterial->getIndexOfRefraction();
+            if(transmittedIoF == currIoR) {
+                transmittedIoF = environment->indexOfRefraction;
+            }
             if(sinTheta <= transmittedIoF / currIoR){
                 double transCoef = (1-Fr)*(1-shapeMaterial->getOpacity());
                 vector3D transmittedRay;
