@@ -25,6 +25,17 @@ shape* raycaster::shootRay(point3D origin, vector3D ray, double& minDistance, sc
     return closestShape;
 }
 
+double raycaster::lightPercentage(point3D origin, vector3D ray, double distanceToLight, scene* environment) {
+    double lightPercentage = 1;
+    for(int i = 0; i < environment->numShapes; i++) {
+        double tempdist = environment->allShapesList[i]->intersects(origin, ray);
+        if((tempdist > 0.000000001) && (tempdist < distanceToLight)) {
+            lightPercentage *= (1 - environment->allShapesList[i]->getColor()->getOpacity());
+        }
+    }
+    return lightPercentage;
+}
+
 color raycaster::calculateRayEffect(int recursions, double currIoR, point3D origin, vector3D rayDirection, scene* environment){
     const int maxRecursions = 10;
     double intersectionDistance = INFINITY;
@@ -63,7 +74,7 @@ color raycaster::calculateRayEffect(int recursions, double currIoR, point3D orig
             if(transmittedIoF == currIoR) {
                 transmittedIoF = environment->indexOfRefraction;
             }
-            if(sinTheta <= transmittedIoF / currIoR){
+            if(sinTheta <= transmittedIoF / currIoR) {
                 double transCoef = (1-Fr)*(1-shapeMaterial->getOpacity());
                 vector3D transmittedRay;
                 double sqrtCoef = std::sqrt(1 - (pow(currIoR / transmittedIoF, 2) * (1 - pow(cosTheta, 2))));

@@ -50,16 +50,13 @@ color Phong_material::phong_illumination(color colorAtPoint, point3D rayOrigin, 
         vector3D normal = intersectedShape->findNormal(intersection, rayOrigin);
         
         double distance = environment->allLights[i]->distanceFromLight(intersection);
-        rays.shootRay(intersection, lightDir, distance, environment);
+        double lightPercentage = rays.lightPercentage(intersection, lightDir, distance, environment);
         color lightShadow;
         if(lightDir.dotProduct(normal) < 0){
             lightShadow = color(0,0,0);
         }
-        else if(distance < environment->allLights[i]->distanceFromLight(intersection)){
-            lightShadow = color(0,0,0);
-        }
         else{
-            lightShadow = environment->allLights[i]->getLightColor(distance);
+            lightShadow = environment->allLights[i]->getLightColor(distance) * lightPercentage;
         }
         double kdNL = specularD*normal.dotProduct(lightDir);
         vector3D H = (lightDir + ((rayOrigin-intersection).getNormalVector())).multiplyByScalar(0.5);
