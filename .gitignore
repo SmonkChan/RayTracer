@@ -33,7 +33,6 @@
 
 # Images
 *.ppm
-*.png
 
 # Other ignores
 ./examples-1c*
